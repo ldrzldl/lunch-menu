@@ -1,0 +1,8 @@
+[
+  {"id":"idea-bibimbap","name":"비빔밥","kind":"idea","category":"한식","price":9000,"dietTags":["채식 선택 가능"],"reason":"채소와 단백질을 함께 챙길 수 있는 균형 잡힌 메뉴예요."},
+  {"id":"idea-kalguksu","name":"칼국수","kind":"idea","category":"한식","price":8000,"dietTags":[],"reason":"따뜻하고 든든한 국물 메뉴가 필요할 때 좋아요."},
+  {"id":"idea-chicken-salad","name":"닭가슴살 샐러드","kind":"idea","category":"샐러드","price":10000,"dietTags":["고단백"],"reason":"가볍게 먹으면서도 단백질을 보충할 수 있어요."},
+  {"id":"idea-curry","name":"채소 카레","kind":"idea","category":"아시아","price":8500,"dietTags":["채식"],"reason":"재료를 쉽게 바꿀 수 있고 포만감이 오래가요."},
+  {"id":"idea-soba","name":"냉모밀","kind":"idea","category":"일식","price":9000,"dietTags":["가벼운 식사"],"reason":"부담이 적고 빠르게 먹기 좋은 메뉴예요."},
+  {"id":"idea-sandwich","name":"통밀 샌드위치","kind":"idea","category":"샌드위치","price":7500,"dietTags":["간편식"],"reason":"시간이 부족한 점심에 간편하게 선택할 수 있어요."}
+]
