@@ -380,6 +380,8 @@ function render() {
   renderRequests(currentSession, currentScenario);
   document.querySelector('#start-panel').hidden = true;
   document.querySelector('#session').hidden = false;
+  document.querySelector('#new-session').hidden = !['completed', 'abandoned'].includes(currentSession.status);
+  document.querySelector('#reflection').hidden = currentSession.status !== 'completed';
   if (currentSession.status === 'completed') renderReflection();
 }
 
@@ -473,6 +475,7 @@ function bindControls() {
   document.querySelector('#resume').addEventListener('click', () => changeSessionState('resume'));
   document.querySelector('#complete-session').addEventListener('click', () => changeSessionState('complete'));
   document.querySelector('#abandon').addEventListener('click', () => changeSessionState('abandon'));
+  document.querySelector('#new-session').addEventListener('click', start);
   document.querySelector('#notify').addEventListener('click', async () => {
     if (!('Notification' in window)) return announce('이 브라우저에서는 시스템 알림을 사용할 수 없습니다.');
     const permission = await Notification.requestPermission();
