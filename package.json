@@ -6,9 +6,6 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "node scripts/build.mjs",
-    "start": "node server/index.js",
-    "test": "node --test",
     "supabase:login": "supabase login",
     "supabase:link": "supabase link --project-ref dxedpmgowlqanderfsww",
     "supabase:status": "supabase migration list",
