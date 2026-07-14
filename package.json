@@ -4,6 +4,7 @@
   "type": "module",
   "engines": { "node": ">=20" },
   "scripts": {
+    "build": "node scripts/build.mjs",
     "start": "node server/index.js",
     "test": "node --test"
   }

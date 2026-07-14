@@ -1,3 +1,7 @@
+import { getSupabaseClient } from './supabase-config.js';
+
+const supabase = getSupabaseClient();
+
 const CARE_LABELS = {
   walk: '산책',
   feed: '밥 주기',
@@ -156,6 +160,146 @@ function browserStorage() {
   };
 }
 
+async function ensureRemoteUser() {
+  if (!supabase) return null;
+  const { data: existing, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError) throw sessionError;
+  if (existing.session?.user) return existing.session.user;
+  const { data, error } = await supabase.auth.signInAnonymously();
+  if (error) throw error;
+  return data.user;
+}
+
+function toRemoteRequest(request, sessionId, index) {
+  return {
+    session_id: sessionId,
+    client_request_id: request.clientRequestId || request.id,
+    request_order: index,
+    type: request.type,
+    due_at: request.dueAt,
+    deadline_at: request.deadlineAt,
+    status: request.status,
+    status_changed_at: request.statusChangedAt,
+    completed_at: request.completedAt,
+    estimated_minutes: request.estimatedMinutes,
+    notification_state: request.notificationState
+  };
+}
+
+function fromRemoteRequest(row) {
+  return {
+    id: row.id,
+    clientRequestId: row.client_request_id,
+    type: row.type,
+    dueAt: row.due_at,
+    deadlineAt: row.deadline_at,
+    status: row.status,
+    statusChangedAt: row.status_changed_at,
+    completedAt: row.completed_at,
+    estimatedMinutes: row.estimated_minutes,
+    notificationState: row.notification_state
+  };
+}
+
+function fromRemoteSession(row) {
+  return {
+    id: row.id,
+    status: row.status,
+    seed: row.seed,
+    scenarioVersion: row.scenario_version,
+    startedAt: row.started_at,
+    pausedAt: row.paused_at,
+    endedAt: row.ended_at,
+    requests: (row.care_requests || []).map(fromRemoteRequest),
+    records: (row.care_requests || []).flatMap((request) =>
+      (request.care_records || []).map((record) => ({
+        id: record.id,
+        requestId: record.request_id,
+        fromStatus: record.from_status,
+        toStatus: record.to_status,
+        changedAt: record.changed_at,
+        elapsedMinutes: Number(record.elapsed_minutes)
+      }))
+    )
+  };
+}
+
+async function createRemoteSession(session) {
+  const user = await ensureRemoteUser();
+  if (!user) return session;
+  const { data: remote, error } = await supabase
+    .from('sessions')
+    .insert({
+      user_id: user.id,
+      status: session.status,
+      seed: session.seed,
+      scenario_version: session.scenarioVersion,
+      started_at: session.startedAt
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  const localRequests = session.requests.map((request, index) => ({
+    ...toRemoteRequest(request, remote.id, index),
+    client_request_id: request.id
+  }));
+  const { data: remoteRequests, error: requestError } = await supabase
+    .from('care_requests')
+    .insert(localRequests)
+    .select();
+  if (requestError) throw requestError;
+  const requestByClientId = new Map(remoteRequests.map((request) => [request.client_request_id, request]));
+  return {
+    ...session,
+    id: remote.id,
+    requests: session.requests.map((request) => fromRemoteRequest(requestByClientId.get(request.id)))
+  };
+}
+
+async function loadRemoteActiveSession() {
+  const user = await ensureRemoteUser();
+  if (!user) return null;
+  const { data, error } = await supabase
+    .from('sessions')
+    .select('*, care_requests(*, care_records(*))')
+    .eq('user_id', user.id)
+    .in('status', ['active', 'paused', 'completed'])
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return data ? fromRemoteSession(data) : null;
+}
+
+async function syncSessionToSupabase(session, previous = null) {
+  if (!supabase) return;
+  const { error: sessionError } = await supabase
+    .from('sessions')
+    .update({
+      status: session.status,
+      paused_at: session.pausedAt,
+      ended_at: session.endedAt,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', session.id);
+  if (sessionError) throw sessionError;
+  const { error: requestError } = await supabase
+    .from('care_requests')
+    .upsert(session.requests.map((request, index) => toRemoteRequest(request, session.id, index)), { onConflict: 'session_id,client_request_id' });
+  if (requestError) throw requestError;
+  const newRecords = session.records.slice(previous?.records.length || 0);
+  if (newRecords.length) {
+    const { error: recordError } = await supabase.from('care_records').insert(newRecords.map((record) => ({
+      request_id: record.requestId,
+      from_status: record.fromStatus,
+      to_status: record.toStatus,
+      changed_at: record.changedAt,
+      elapsed_minutes: record.elapsedMinutes
+    })));
+    if (recordError) throw recordError;
+  }
+}
+
 async function loadScenario() {
   const response = await fetch('/data/care-scenarios.json');
   if (!response.ok) throw new Error('scenario load failed');
@@ -216,6 +360,7 @@ let currentScenario;
 async function updateAction(requestId, action) {
   try {
     const updated = applyAction(currentSession, requestId, action);
+    await syncSessionToSupabase(updated, currentSession);
     saveSession(updated, browserStorage());
     currentSession = updated;
     render();
@@ -259,7 +404,8 @@ function renderReflection() {
 async function start() {
   try {
     currentScenario = await loadScenario();
-    currentSession = createSession({ scenario: currentScenario });
+    const localSession = createSession({ scenario: currentScenario });
+    currentSession = await createRemoteSession(localSession);
     saveSession(currentSession, browserStorage());
     setStoredSessionId(currentSession.id);
     render();
@@ -269,7 +415,8 @@ async function start() {
   }
 }
 
-function changeSessionState(action) {
+async function changeSessionState(action) {
+  const previous = clone(currentSession);
   if (action === 'complete') currentSession.status = 'completed';
   if (action === 'pause') currentSession.status = 'paused';
   if (action === 'resume') currentSession.status = 'active';
@@ -278,16 +425,28 @@ function changeSessionState(action) {
     currentSession.endedAt = new Date().toISOString();
   }
   if (action === 'pause') currentSession.pausedAt = new Date().toISOString();
-  saveSession(currentSession, browserStorage());
-  render();
+  try {
+    await syncSessionToSupabase(currentSession, previous);
+    saveSession(currentSession, browserStorage());
+    render();
+  } catch {
+    currentSession = previous;
+    announce('저장에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+  }
 }
 
 async function boot() {
   currentScenario = await loadScenario();
-  const id = getStoredSessionId();
-  if (id) currentSession = loadSession(id, browserStorage());
+  try {
+    currentSession = await loadRemoteActiveSession();
+  } catch {
+    const id = getStoredSessionId();
+    if (id) currentSession = loadSession(id, browserStorage());
+  }
   if (currentSession) {
+    const previous = clone(currentSession);
     currentSession = reconcileRequests(currentSession);
+    await syncSessionToSupabase(currentSession, previous);
     saveSession(currentSession, browserStorage());
     render();
   }
@@ -298,9 +457,12 @@ async function boot() {
   document.querySelector('#abandon').addEventListener('click', () => changeSessionState('abandon'));
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState !== 'visible' || !currentSession) return;
+    const previous = clone(currentSession);
     currentSession = reconcileRequests(currentSession);
-    saveSession(currentSession, browserStorage());
-    render();
+    syncSessionToSupabase(currentSession, previous)
+      .then(() => saveSession(currentSession, browserStorage()))
+      .then(() => render())
+      .catch(() => announce('변경사항을 저장하지 못했습니다. 다시 시도해 주세요.'));
   });
   document.querySelector('#notify').addEventListener('click', async () => {
     if (!('Notification' in window)) return announce('이 브라우저에서는 시스템 알림을 사용할 수 없습니다.');
