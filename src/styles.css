@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+:root { --ink:#20201e; --muted:#7c7b75; --cream:#f8f5ed; --card:#fffdf8; --orange:#ed6a42; --yellow:#f3bd35; --line:#e8e2d7; }
+* { box-sizing:border-box; }
+body { margin:0; color:var(--ink); background:var(--cream); font-family:'Noto Sans KR',sans-serif; }
+body:before { content:''; position:fixed; inset:0; pointer-events:none; opacity:.32; background-image:radial-gradient(#d9d1c3 .6px, transparent .6px); background-size:8px 8px; }
+.app-shell { position:relative; width:min(760px,100%); margin:0 auto; padding:38px 22px 54px; }
+.hero { padding:20px 8px 44px; }
+.brand { font:900 23px 'DM Sans',sans-serif; letter-spacing:-1px; margin-bottom:68px; }
+.brand span { color:var(--orange); }
+.eyebrow { margin:0 0 10px; color:var(--orange); font:700 12px 'DM Sans',sans-serif; letter-spacing:2px; }
+h1 { margin:0; font-size:clamp(34px,7vw,58px); line-height:1.18; letter-spacing:-3px; }
+h1 em { color:var(--orange); font-style:normal; }
+.hero-copy { margin:22px 0 0; color:var(--muted); line-height:1.8; font-size:15px; }
+.panel { background:var(--card); border:1px solid var(--line); border-radius:24px; padding:34px clamp(22px,5vw,48px); box-shadow:0 14px 40px #55452b0b; }
+.panel-heading { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--line); padding-bottom:24px; margin-bottom:4px; }
+h2 { margin:0; font-size:26px; letter-spacing:-1px; }
+.question-count { color:var(--muted); font:700 11px 'DM Sans',sans-serif; letter-spacing:1px; }
+.question { border:0; border-bottom:1px solid var(--line); margin:0; padding:27px 0; }
+.question legend { display:flex; gap:12px; align-items:center; padding:0; font-size:17px; font-weight:700; letter-spacing:-.5px; }
+.question legend span { color:var(--orange); font:700 12px 'DM Sans',sans-serif; }
+.options { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:16px; }
+.option { position:relative; cursor:pointer; }
+.option input { position:absolute; opacity:0; }
+.option span { display:block; height:100%; padding:13px 14px; color:#67655f; background:#faf8f3; border:1px solid transparent; border-radius:11px; font-size:13px; line-height:1.45; transition:.2s; }
+.option input:checked + span { color:var(--ink); background:#fff0e9; border-color:var(--orange); box-shadow:inset 3px 0 var(--orange); }
+.option input:focus-visible + span { outline:3px solid #f3bd3580; }
+.primary-button,.secondary-button { width:100%; border:0; border-radius:12px; padding:17px 20px; margin-top:30px; cursor:pointer; font:700 15px 'Noto Sans KR',sans-serif; }
+.primary-button { color:white; background:var(--orange); box-shadow:0 8px 18px #ed6a4238; }
+.primary-button span { float:right; font-size:20px; line-height:15px; }
+.secondary-button { color:var(--orange); background:#fff0e9; }
+.validation { color:#c0392b; margin:18px 0 -10px; font-size:13px; }
+.result-intro { color:var(--muted); line-height:1.7; font-size:14px; }
+.result-card { display:flex; gap:17px; border-top:1px solid var(--line); padding:25px 0; }
+.medal { flex:none; font-size:34px; }
+.result-main { flex:1; }
+.rank { margin:0 0 4px; color:var(--orange); font:700 11px 'DM Sans',sans-serif; letter-spacing:.5px; }
+.result-main h3 { margin:0 0 9px; font-size:24px; letter-spacing:-1px; }
+.result-main > p:not(.rank) { margin:0; color:#65635e; font-size:13px; line-height:1.65; }
+.result-columns { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:17px; }
+.result-columns strong { font-size:12px; }
+.result-columns ul { margin:7px 0 0; padding-left:16px; color:#706e67; font-size:12px; line-height:1.7; }
+.tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:15px; }
+.tags span { padding:5px 9px; border-radius:20px; color:#9b613d; background:#fff0e9; font-size:11px; }
+footer { padding:24px 8px 0; color:#a19d93; font-size:11px; line-height:1.7; text-align:center; }
+@media (max-width:560px) { .app-shell { padding-top:22px; } .brand { margin-bottom:50px; } .options,.result-columns { grid-template-columns:1fr; } .panel { padding:27px 18px; border-radius:18px; } .question legend { font-size:15px; } .question-count { display:none; } }

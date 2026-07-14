@@ -6,6 +6,8 @@
     "node": ">=20"
   },
   "scripts": {
+    "build": "node -e \"const fs=require('fs'); fs.rmSync('dist',{recursive:true,force:true}); fs.cpSync('src','dist',{recursive:true});\"",
+    "start": "node dev-server.cjs",
     "supabase:login": "supabase login",
     "supabase:link": "supabase link --project-ref dxedpmgowlqanderfsww",
     "supabase:status": "supabase migration list",
