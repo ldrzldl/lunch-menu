@@ -272,7 +272,8 @@ async function loadRemoteActiveSession() {
 }
 
 async function syncSessionToSupabase(session, previous = null) {
-  if (!supabase) return;
+  // 로컬에서 만든 세션은 원격 ID가 없으므로 원격 저장을 시도하지 않는다.
+  if (!supabase || !session.id || session.id.startsWith('session-')) return;
   const { error: sessionError } = await supabase
     .from('sessions')
     .update({
@@ -405,7 +406,12 @@ async function start() {
   try {
     currentScenario = await loadScenario();
     const localSession = createSession({ scenario: currentScenario });
-    currentSession = await createRemoteSession(localSession);
+    // 원격 인증·저장이 일시적으로 실패해도 핵심 체험은 로컬에서 계속한다.
+    try {
+      currentSession = await createRemoteSession(localSession);
+    } catch {
+      currentSession = localSession;
+    }
     saveSession(currentSession, browserStorage());
     setStoredSessionId(currentSession.id);
     render();
@@ -436,8 +442,9 @@ async function changeSessionState(action) {
 }
 
 async function boot() {
-  currentScenario = await loadScenario();
+  bindEvents();
   try {
+    currentScenario = await loadScenario();
     currentSession = await loadRemoteActiveSession();
   } catch {
     const id = getStoredSessionId();
@@ -450,6 +457,9 @@ async function boot() {
     saveSession(currentSession, browserStorage());
     render();
   }
+}
+
+function bindEvents() {
   document.querySelector('#start-button').addEventListener('click', start);
   document.querySelector('#pause').addEventListener('click', () => changeSessionState('pause'));
   document.querySelector('#resume').addEventListener('click', () => changeSessionState('resume'));
