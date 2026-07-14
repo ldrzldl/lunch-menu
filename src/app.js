@@ -405,7 +405,12 @@ async function start() {
   try {
     currentScenario = await loadScenario();
     const localSession = createSession({ scenario: currentScenario });
-    currentSession = await createRemoteSession(localSession);
+    try {
+      currentSession = await createRemoteSession(localSession);
+    } catch {
+      // 원격 인증이나 네트워크가 늦어져도 핵심 체험은 로컬에서 시작한다.
+      currentSession = localSession;
+    }
     saveSession(currentSession, browserStorage());
     setStoredSessionId(currentSession.id);
     render();
@@ -436,6 +441,7 @@ async function changeSessionState(action) {
 }
 
 async function boot() {
+  bindControls();
   currentScenario = await loadScenario();
   try {
     currentSession = await loadRemoteActiveSession();
@@ -450,11 +456,6 @@ async function boot() {
     saveSession(currentSession, browserStorage());
     render();
   }
-  document.querySelector('#start-button').addEventListener('click', start);
-  document.querySelector('#pause').addEventListener('click', () => changeSessionState('pause'));
-  document.querySelector('#resume').addEventListener('click', () => changeSessionState('resume'));
-  document.querySelector('#complete-session').addEventListener('click', () => changeSessionState('complete'));
-  document.querySelector('#abandon').addEventListener('click', () => changeSessionState('abandon'));
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState !== 'visible' || !currentSession) return;
     const previous = clone(currentSession);
@@ -464,6 +465,14 @@ async function boot() {
       .then(() => render())
       .catch(() => announce('변경사항을 저장하지 못했습니다. 다시 시도해 주세요.'));
   });
+}
+
+function bindControls() {
+  document.querySelector('#start-button').addEventListener('click', start);
+  document.querySelector('#pause').addEventListener('click', () => changeSessionState('pause'));
+  document.querySelector('#resume').addEventListener('click', () => changeSessionState('resume'));
+  document.querySelector('#complete-session').addEventListener('click', () => changeSessionState('complete'));
+  document.querySelector('#abandon').addEventListener('click', () => changeSessionState('abandon'));
   document.querySelector('#notify').addEventListener('click', async () => {
     if (!('Notification' in window)) return announce('이 브라우저에서는 시스템 알림을 사용할 수 없습니다.');
     const permission = await Notification.requestPermission();
