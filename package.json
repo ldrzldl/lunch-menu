@@ -2,10 +2,20 @@
   "name": "dog-care-readiness-simulation",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "start": "node server/index.js",
-    "test": "node --test"
+    "test": "node --test",
+    "supabase:login": "supabase login",
+    "supabase:link": "supabase link --project-ref dxedpmgowlqanderfsww",
+    "supabase:status": "supabase migration list",
+    "supabase:new": "supabase migration new",
+    "supabase:push": "supabase db push"
+  },
+  "devDependencies": {
+    "supabase": "^2.109.1"
   }
 }

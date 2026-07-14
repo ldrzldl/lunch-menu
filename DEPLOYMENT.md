@@ -34,3 +34,28 @@ npm start
 ```
 
 브라우저에서 `http://localhost:3000`을 열어 확인합니다.
+
+## Supabase migration 운영
+
+Supabase CLI는 프로젝트에 개발 의존성으로 포함되어 있습니다. 프로젝트 루트에서
+아래 명령을 실행합니다.
+
+```bash
+npm run supabase:login
+npm run supabase:link
+npm run supabase:status
+```
+
+처음 연결할 때는 `supabase:status`로 원격에 이미 적용된 migration을 먼저 확인합니다.
+기존 migration을 SQL Editor에서 직접 실행했다면, 같은 migration이 이미 적용되어
+있는지 확인하지 않고 `push`하지 않습니다.
+
+새로운 테이블 구조 변경은 기존 파일을 수정하지 않고 새 migration으로 만듭니다.
+
+```bash
+npm run supabase:new -- add_description_to_sessions
+npm run supabase:push
+```
+
+`supabase:push`는 아직 원격에 적용되지 않은 migration만 실행합니다. migration 파일은
+반드시 GitHub에 커밋해 schema 변경 이력을 보존합니다.
