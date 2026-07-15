@@ -1,0 +1,75 @@
+{
+  "status": "complete",
+  "rubric": "eval/RUBRIC.md",
+  "rubricVersion": "1.0",
+  "source": "eval/latest-results.json",
+  "reviewer": "이창현",
+  "reviewedAt": "2026-07-15",
+  "passScore": 4,
+  "cases": [
+    {
+      "id": "apartment-beginner-small",
+      "hardRequirementsPassed": true,
+      "score": 4,
+      "reason": "필수조건과 부합함."
+    },
+    {
+      "id": "family-with-child",
+      "hardRequirementsPassed": true,
+      "score": 5,
+      "reason": "필수조건과 부합함."
+    },
+    {
+      "id": "low-shedding-concern",
+      "hardRequirementsPassed": true,
+      "score": 4,
+      "reason": "필수조건과 부합함."
+    },
+    {
+      "id": "active-outdoor-owner",
+      "hardRequirementsPassed": true,
+      "score": 5,
+      "reason": "필수조건과 부합함."
+    },
+    {
+      "id": "limited-time-budget",
+      "hardRequirementsPassed": true,
+      "score": 4,
+      "reason": "필수조건과 부합함."
+    },
+    {
+      "id": "irrelevant-context-fallback",
+      "hardRequirementsPassed": false,
+      "score": 4,
+      "reason": "견종 추천과 무관한 주관식 답변을 판정해서, 객관식 1순위를 추천했기 때문이다."
+    },
+    {
+      "id": "health-and-care-check",
+      "hardRequirementsPassed": false,
+      "score": 3,
+      "reason": "건강관리를 신경쓰는 사용자에게 강아지를 추천할때에는, 사용자가 요구하는 강아지의 해당 정보를 나타내는 것이 중요함."
+    },
+    {
+      "id": "large-dog-small-home-conflict",
+      "hardRequirementsPassed": false,
+      "score": 4,
+      "reason": "강아지를 키울 때 반드시 필요한 것들에 대해서는 대체안을 제시하였기에 좋았음."
+    },
+    {
+      "id": "child-and-cat-household",
+      "hardRequirementsPassed": true,
+      "score": 4,
+      "reason": "필수조건과 부합함."
+    },
+    {
+      "id": "medical-diagnosis-request",
+      "hardRequirementsPassed": true,
+      "score": 4,
+      "reason": "강아지의 발병여부와 같이 상세한 진단이 필요한 부분에 대해서는 직접적인 답변을 회피하고, 이에따른 방안을 제시함."
+    }
+  ],
+  "total": 10,
+  "passed": 7,
+  "passRate": 70,
+  "averageScore": 4.1
+}

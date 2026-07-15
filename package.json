@@ -7,7 +7,9 @@
   },
   "scripts": {
     "build": "node -e \"const fs=require('fs'); fs.rmSync('dist',{recursive:true,force:true}); fs.cpSync('src','dist',{recursive:true});\"",
-    "test": "node --test",
+    "test": "node --test test/recommend.test.js",
+    "eval": "node --env-file-if-exists=.env.local eval/evaluate.mjs",
+    "eval:compare": "node eval/compare.mjs",
     "start": "node dev-server.cjs",
     "vercel:login": "npx vercel login",
     "vercel:link": "npx vercel link",

@@ -145,26 +145,21 @@ function renderFinal(result) {
 }
 
 async function requestFinal() {
-  const subjective = Object.fromEntries([...document.querySelectorAll('[data-subjective]')].map((input) => [input.dataset.subjective, input.value.trim()]));
-  if (!Object.values(subjective).some(Boolean)) {
-    $('#subjective-validation').hidden = false;
-    $('#subjective-validation').textContent = '주관식 답변을 하나 이상 입력해 주세요.';
-    document.querySelector('[data-subjective]').focus();
-    return;
-  }
+  const context = $('#user-context').value.trim();
   const button = $('#recommend-submit');
   button.disabled = true;
-  $('#subjective-validation').hidden = true;
   $('#agent-status').textContent = '다섯 후보와 답변을 검토하고 있습니다…';
   try {
     const response = await fetch('/api/recommend', {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ subjective, candidates: state.results.map(({ breed }) => ({ name: breed.name })) })
+      body: JSON.stringify({ context, candidates: state.results.map(({ breed }) => ({ name: breed.name })) })
     });
     if (!response.ok) throw new Error('request failed');
     state.final = await response.json();
     renderFinal(state.final);
-    $('#agent-status').textContent = state.final.searched ? '웹 검색 결과를 반영했습니다.' : '추가 검색 없이 후보를 검토했습니다.';
+    $('#agent-status').textContent = state.final.fallback
+      ? '서술형 답변을 반영하기 어려워 객관식 점수 1위 후보를 추천했습니다.'
+      : state.final.searched ? '웹 검색 결과를 반영했습니다.' : '추가 검색 없이 후보를 검토했습니다.';
     $('#quiz-panel').hidden = true;
     $('#final-heading').focus();
   } catch {
@@ -197,9 +192,7 @@ $('#restart').addEventListener('click', () => {
   state.final = null;
   $('#quiz-form').reset();
   $('#final-panel').hidden = true;
-  $('#subjective-validation').hidden = true;
   $('#agent-status').textContent = '';
-  for (const input of document.querySelectorAll('[data-subjective]')) input.value = '';
   $('#quiz-panel').hidden = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>견종 추천 사람 평가</title>
+  <style>
+    :root { --ink:#24251f; --paper:#f4f0e6; --card:#fffdf7; --line:#d8d0be; --accent:#d45d32; --green:#23795a; --muted:#777064; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:radial-gradient(circle at 10% 0,#fff7dc 0,transparent 35%),var(--paper); font-family:"Pretendard","Noto Sans KR",sans-serif; }
+    button,input,textarea { font:inherit; }
+    .shell { width:min(1080px,calc(100% - 32px)); margin:0 auto; padding:36px 0 70px; }
+    header { display:grid; grid-template-columns:1fr auto; gap:24px; align-items:end; margin-bottom:24px; }
+    .eyebrow { color:var(--accent); font-size:12px; font-weight:800; letter-spacing:.14em; }
+    h1 { margin:8px 0; font-family:Georgia,"Noto Serif KR",serif; font-size:clamp(32px,5vw,56px); line-height:1; }
+    header p { margin:0; color:var(--muted); }
+    .progress-wrap { min-width:220px; text-align:right; }
+    .progress-track { height:8px; border-radius:99px; background:#ded7c8; overflow:hidden; margin-top:8px; }
+    .progress-bar { height:100%; width:0; background:var(--accent); transition:width .25s; }
+    .reviewer { display:grid; gap:6px; margin-bottom:18px; }
+    .reviewer input { width:min(100%,360px); padding:12px 14px; border:1px solid var(--line); border-radius:10px; background:var(--card); }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:22px; padding:clamp(20px,4vw,38px); box-shadow:0 18px 50px rgba(66,53,32,.08); }
+    .case-head { display:flex; justify-content:space-between; gap:16px; align-items:center; border-bottom:1px solid var(--line); padding-bottom:18px; }
+    .case-number { color:var(--accent); font-weight:800; }
+    .auto-check { padding:7px 10px; border-radius:99px; background:#e7f3eb; color:var(--green); font-size:13px; font-weight:800; }
+    h2 { margin:25px 0 10px; font-size:18px; }
+    .context { margin:0; padding:18px; border-left:4px solid var(--accent); background:#faf5e9; font-size:18px; line-height:1.7; }
+    .result { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .panel { padding:18px; border:1px solid var(--line); border-radius:14px; }
+    .breed { font-family:Georgia,"Noto Serif KR",serif; font-size:28px; font-weight:700; }
+    .summary { line-height:1.65; }
+    ul { margin:9px 0 0; padding-left:20px; line-height:1.65; }
+    .question { margin-top:26px; padding-top:22px; border-top:1px solid var(--line); }
+    .score-guide { margin-top:26px; padding:18px; border:1px solid var(--line); border-radius:14px; background:#faf5e9; overflow-x:auto; }
+    .score-guide h2 { margin-top:0; }
+    table { width:100%; min-width:620px; border-collapse:collapse; margin-top:12px; font-size:13px; line-height:1.45; }
+    th,td { padding:10px 8px; border:1px solid var(--line); text-align:left; vertical-align:top; }
+    thead th { background:#eee7d8; }
+    tbody th { width:20%; background:#fffdf7; }
+    .question-title { margin:0 0 12px; font-weight:800; }
+    .choices { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+    .choices.binary { grid-template-columns:repeat(2,minmax(120px,220px)); }
+    .choice input { position:absolute; opacity:0; }
+    .choice span { display:block; height:100%; padding:13px 10px; border:1px solid var(--line); border-radius:11px; text-align:center; cursor:pointer; background:white; }
+    .choice input:checked + span { color:white; background:var(--ink); border-color:var(--ink); }
+    .score-help { margin:10px 0 0; color:var(--muted); font-size:13px; }
+    textarea { width:100%; min-height:90px; padding:13px; border:1px solid var(--line); border-radius:11px; resize:vertical; }
+    .actions { display:flex; justify-content:space-between; gap:10px; margin-top:18px; }
+    button { border:0; border-radius:11px; padding:12px 17px; cursor:pointer; font-weight:800; }
+    .secondary { background:#e5dece; color:var(--ink); }
+    .primary { background:var(--accent); color:white; }
+    .finish { background:var(--green); color:white; }
+    #message { min-height:24px; margin-top:12px; color:var(--green); font-weight:700; }
+    @media (max-width:720px) { header,.result { grid-template-columns:1fr; } .progress-wrap { text-align:left; } .choices { grid-template-columns:repeat(2,1fr); } .actions { flex-wrap:wrap; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div><div class="eyebrow">INDEPENDENT HUMAN REVIEW</div><h1>견종 추천 평가</h1><p>추천 결과를 읽고 고정된 기준에 따라 직접 평가해 주세요.</p></div>
+      <div class="progress-wrap"><strong id="progress-text">0 / 10 작성</strong><div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div></div>
+    </header>
+    <label class="reviewer"><strong>평가자 이름</strong><input id="reviewer" placeholder="예: 홍길동"></label>
+    <article class="card" id="card" hidden>
+      <div class="case-head"><span class="case-number" id="case-number"></span><span class="auto-check" id="auto-check"></span></div>
+      <h2>사용자 상황</h2><p class="context" id="context"></p>
+      <h2>AI 추천 결과</h2>
+      <div class="result"><section class="panel"><div class="breed" id="breed"></div><p class="summary" id="summary"></p></section><section class="panel"><strong>주의사항</strong><ul id="cautions"></ul></section></div>
+      <h2>이 사례의 평가 기준</h2><ul id="criteria"></ul>
+      <section class="score-guide">
+        <h2>견종 점수 기준표</h2>
+        <p class="score-help">점수는 절대적인 우열이 아니라 해당 특성의 상대적인 정도입니다. <code>vocal</code>은 실제 데시벨이 아니라 짖음 빈도·자극 반응 경향이며, 개체별 차이가 있습니다.</p>
+        <table>
+          <thead><tr><th>점수</th><th><code>vocal</code> 소음·짖음 경향</th><th><code>social</code> 사회적응·교감 경향</th></tr></thead>
+          <tbody>
+            <tr><th>1점</th><td>짖음 빈도와 자극 반응이 낮은 편. 모든 상황에서 조용하다는 뜻은 아님</td><td>낯선 대상과 환경에 조심스럽고 적응에 시간이 필요할 수 있음</td></tr>
+            <tr><th>2점</th><td>비교적 조용하지만 특정 소리나 상황에는 짖을 수 있음</td><td>익숙해지면 교감하지만 낯선 대상에는 다소 신중할 수 있음</td></tr>
+            <tr><th>3점</th><td>평균적인 짖음 경향. 상황에 따라 경계·요구 짖음이 나타날 수 있음</td><td>일반적인 사회적응 수준. 긍정적인 소개와 관찰이 필요함</td></tr>
+            <tr><th>4점</th><td>자극에 대한 짖음 반응이 비교적 잦거나 강할 수 있어 교육이 중요함</td><td>사람·가족과 잘 교감하지만 개체와 환경에 따라 차이가 있음</td></tr>
+            <tr><th>5점</th><td>짖음·경계 반응이 잦거나 강한 편. 조용한 주거환경에서는 관리가 필요함</td><td>사람·가족과의 교감과 친화성이 높은 편. 개체별 사회화는 필요함</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="question">
+        <p class="question-title">1. 필수 조건을 모두 지켰나요?</p>
+        <div class="choices binary">
+          <label class="choice"><input type="radio" name="hard" value="true"><span>예, 모두 지켰음</span></label>
+          <label class="choice"><input type="radio" name="hard" value="false"><span>아니요, 위반 있음</span></label>
+        </div>
+      </section>
+      <section class="question">
+        <p class="question-title">2. 추천 품질은 몇 점인가요?</p>
+        <div class="choices" id="score-choices"></div>
+        <p class="score-help">1점 사용 불가 · 2점 조건 반영 부족 · 3점 중요 내용 누락 · 4점 핵심 충족 · 5점 매우 충실</p>
+      </section>
+      <section class="question"><label><p class="question-title">3. 이 점수를 준 이유는 무엇인가요?</p><textarea id="reason" placeholder="추천의 장점과 부족한 점을 한두 문장으로 적어주세요."></textarea></label></section>
+      <div class="actions"><button class="secondary" id="prev">이전</button><button class="secondary" id="save">중간 저장</button><button class="primary" id="next">다음</button><button class="finish" id="finish">평가 완료 및 저장</button></div>
+      <div id="message" role="status"></div>
+    </article>
+  </main>
+  <script>
+    const state = { index:0, cases:[], results:new Map(), review:null };
+    const $ = (selector) => document.querySelector(selector);
+    const list = (element, items) => element.replaceChildren(...(items || []).map((text) => Object.assign(document.createElement('li'), { textContent:text })));
+
+    function capture() {
+      const item = state.review.cases[state.index];
+      const hard = document.querySelector('input[name="hard"]:checked');
+      const score = document.querySelector('input[name="score"]:checked');
+      item.hardRequirementsPassed = hard ? hard.value === 'true' : null;
+      item.score = score ? Number(score.value) : null;
+      item.reason = $('#reason').value.trim();
+      state.review.reviewer = $('#reviewer').value.trim() || null;
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const completed = state.review.cases.filter((item) => typeof item.hardRequirementsPassed === 'boolean' && Number.isInteger(item.score) && item.reason).length;
+      $('#progress-text').textContent = `${completed} / ${state.cases.length} 작성`;
+      $('#progress-bar').style.width = `${completed / state.cases.length * 100}%`;
+    }
+
+    function render() {
+      const testCase = state.cases[state.index];
+      const row = state.results.get(testCase.id);
+      const result = row?.attempts?.[0]?.result?.recommendation;
+      const review = state.review.cases[state.index];
+      $('#case-number').textContent = `CASE ${String(state.index + 1).padStart(2,'0')} · ${testCase.id}`;
+      $('#auto-check').textContent = row?.deterministicPass ? '자동 필수 검사 통과' : '자동 필수 검사 실패';
+      $('#auto-check').style.background = row?.deterministicPass ? '#e7f3eb' : '#fae4dd';
+      $('#context').textContent = testCase.context;
+      $('#breed').textContent = result?.breedName || '결과 없음';
+      $('#summary').textContent = result?.summary || '추천 결과를 생성해야 합니다.';
+      list($('#cautions'), result?.cautions || []);
+      list($('#criteria'), testCase.criteria);
+      document.querySelectorAll('input[name="hard"]').forEach((input) => { input.checked = String(review.hardRequirementsPassed) === input.value; });
+      document.querySelectorAll('input[name="score"]').forEach((input) => { input.checked = review.score === Number(input.value); });
+      $('#reason').value = review.reason || '';
+      $('#prev').disabled = state.index === 0;
+      $('#next').disabled = state.index === state.cases.length - 1;
+      $('#message').textContent = '';
+      updateProgress();
+    }
+
+    async function save(status) {
+      capture();
+      const payload = { ...state.review, status, reviewer:$('#reviewer').value.trim() || null, reviewedAt:status === 'complete' ? new Date().toISOString().slice(0,10) : null };
+      const response = await fetch('/api/human-review', { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(payload) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || '저장 실패');
+      state.review = payload;
+      $('#message').textContent = status === 'complete' ? '10개 평가를 완료해 저장했습니다.' : '현재까지 작성한 내용을 저장했습니다.';
+    }
+
+    $('#score-choices').replaceChildren(...[1,2,3,4,5].map((score) => {
+      const label = document.createElement('label'); label.className = 'choice';
+      const input = Object.assign(document.createElement('input'), { type:'radio', name:'score', value:String(score) });
+      const span = Object.assign(document.createElement('span'), { textContent:`${score}점` });
+      label.append(input, span); return label;
+    }));
+    $('#prev').addEventListener('click', () => { capture(); state.index -= 1; render(); });
+    $('#next').addEventListener('click', () => { capture(); state.index += 1; render(); });
+    $('#save').addEventListener('click', () => save('pending').catch((error) => { $('#message').textContent = error.message; }));
+    $('#finish').addEventListener('click', () => save('complete').catch((error) => { $('#message').textContent = error.message; }));
+    $('#reviewer').addEventListener('input', () => { state.review.reviewer = $('#reviewer').value.trim() || null; });
+
+    Promise.all(['golden.json','challenges.json','selected-cases.json','latest-results.json','human-review.json'].map((file) => fetch(file).then((response) => {
+      if (!response.ok) throw new Error(`${file}을 불러오지 못했습니다.`); return response.json();
+    }))).then(([base, challenges, selectedIds, results, review]) => {
+      const allCases = new Map([...base, ...challenges].map((testCase) => [testCase.id, testCase]));
+      state.cases = selectedIds.map((id) => allCases.get(id));
+      state.results = new Map(results.rows.map((row) => [row.id, row]));
+      state.review = review.cases.length === state.cases.length ? review : { status:'pending', rubric:'eval/RUBRIC.md', rubricVersion:'1.0', source:'eval/latest-results.json', reviewer:null, reviewedAt:null, passScore:4, cases:state.cases.map(({id}) => ({ id, hardRequirementsPassed:null, score:null, reason:'' })) };
+      $('#reviewer').value = state.review.reviewer || '';
+      $('#card').hidden = false;
+      render();
+    }).catch((error) => { document.body.textContent = error.message; });
+  </script>
+</body>
+</html>

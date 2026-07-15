@@ -25,14 +25,11 @@
         <div id="quiz"></div>
         <section class="subjective-panel" aria-labelledby="subjective-heading">
           <div class="panel-heading"><div><p class="eyebrow">YOUR CONTEXT</p><h3 id="subjective-heading">내 상황을 더 알려주세요</h3></div></div>
-          <p class="result-intro">객관식 답변과 함께 고려할 생활 맥락을 적어주세요. 답변은 최종 추천 요청에만 사용됩니다.</p>
           <div class="subjective-grid">
-            <label>혼자 있는 시간<textarea data-subjective="aloneTime" rows="3" placeholder="평일에 강아지가 혼자 있는 시간을 알려주세요."></textarea></label>
-            <label>가장 걱정되는 점<textarea data-subjective="concerns" rows="3" placeholder="짖음, 털, 건강, 훈련 등 걱정을 적어주세요."></textarea></label>
-            <label>원하는 생활 방식<textarea data-subjective="lifestyle" rows="3" placeholder="산책, 여행, 가족 생활 등 원하는 모습을 적어주세요."></textarea></label>
-            <label>피하고 싶은 특성<textarea data-subjective="avoid" rows="3" placeholder="반드시 피하고 싶은 특성이 있다면 적어주세요."></textarea></label>
+            <label>더 정확한 추천을 위해, 참고했으면 하는 점이 있다면 자유롭게 적어주세요.
+              <textarea id="user-context" data-subjective="context" rows="5" maxlength="1000" placeholder="예: 평일에는 집을 오래 비우고, 주말에는 함께 등산하고 싶어요. 짖음과 털 빠짐이 걱정돼요."></textarea>
+            </label>
           </div>
-          <p id="subjective-validation" class="validation" role="alert" hidden></p>
           <div class="subjective-actions"><span id="agent-status" role="status" aria-live="polite"></span></div>
         </section>
         <p id="validation" class="validation" hidden></p>

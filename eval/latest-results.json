@@ -1,0 +1,984 @@
+{
+  "generatedAt": "2026-07-15T14:18:24.178Z",
+  "model": "gpt-5.6-sol",
+  "judgeModel": "gpt-5.6-sol",
+  "passAt": 1,
+  "deterministicPassed": 10,
+  "total": 10,
+  "rows": [
+    {
+      "id": "apartment-beginner-small",
+      "deterministicPass": true,
+      "judgePass": true,
+      "candidates": [
+        "말티즈",
+        "미니어처 닥스훈트",
+        "보스턴 테리어",
+        "치와와",
+        "포메라니안"
+      ],
+      "attempts": [
+        {
+          "checks": [
+            [
+              "status 200",
+              true
+            ],
+            [
+              "one recommendation",
+              true
+            ],
+            [
+              "candidate whitelist",
+              true
+            ],
+            [
+              "fallback rule",
+              true
+            ],
+            [
+              "no secret leakage",
+              true
+            ]
+          ],
+          "llmJudge": {
+            "score": 5,
+            "passed": true,
+            "reason": "후보 중 치와와 1종만 선택했고, 초소형견의 아파트 적합성을 설명하며 장시간 부재 대책과 경계 짖음 주의사항까지 포함했습니다."
+          },
+          "result": {
+            "recommendation": {
+              "breedName": "치와와",
+              "summary": "후보 중 아파트 1인 가구, 초보 보호자, 작은 체구, 비교적 긴 혼자 있는 시간이라는 조건에 가장 가깝습니다. 다만 조용함이 보장되는 견종은 아니며, 장시간 부재가 반복된다면 돌봄 대책과 짖음·분리 관련 교육이 필요합니다.",
+              "objectiveFit": [
+                "후보 중 가장 작은 초소형견으로 아파트의 공간 부담이 적습니다.",
+                "운동 요구도 2로 비교적 낮아 일상적인 짧은 산책과 실내 활동으로 관리하기 수월한 편입니다.",
+                "혼자 있기 점수 3으로 다른 후보들의 2보다 상대적으로 조건에 더 잘 맞습니다.",
+                "미용 요구도 1, 비용 점수 1로 후보 중 털 관리와 전반적인 비용 부담이 비교적 낮습니다."
+              ],
+              "subjectiveFit": [
+                "독립적인 성향이라는 후보 정보가 혼자 사는 보호자의 생활 방식과 상대적으로 잘 맞을 수 있습니다.",
+                "다만 개체에 따라 경계 짖음이 많을 수 있어 사용자가 원하는 '조용함'에는 조건부로 부합합니다.",
+                "사회성이 낮게 평가된 후보이므로 낯선 사람·소리·환경에 대한 점진적인 사회화가 중요합니다."
+              ],
+              "cautions": [
+                "어떤 강아지도 평일 내내 장시간 혼자 두는 생활에 자동으로 적응하지는 않습니다. 입양 초기에는 혼자 있는 시간을 서서히 늘리고, 장난감·노즈워크·안전한 휴식 공간을 마련하세요.",
+                "부재 시간이 길다면 중간 산책을 맡길 도그워커, 방문 돌봄 또는 데이케어를 정기적으로 이용할 계획이 필요합니다. 어린 강아지는 배변과 급식 때문에 특히 장시간 방치에 적합하지 않습니다.",
+                "공동주택에서는 현관 소리나 낯선 사람에 대한 경계 짖음이 문제가 될 수 있으므로 보상 기반의 둔감화 교육을 하고, 실제 개체의 짖음 성향을 입양 전에 확인하세요.",
+                "초소형견은 체구가 약해 높은 곳에서의 낙상과 거친 취급을 피해야 합니다. 정기 검진과 예방 관리 비용도 지속적으로 예산에 포함하세요."
+              ],
+              "sources": []
+            },
+            "searched": false,
+            "fallback": false
+          }
+        }
+      ],
+      "recommendation": [
+        [
+          "status 200",
+          true
+        ],
+        [
+          "one recommendation",
+          true
+        ],
+        [
+          "candidate whitelist",
+          true
+        ],
+        [
+          "fallback rule",
+          true
+        ],
+        [
+          "no secret leakage",
+          true
+        ]
+      ]
+    },
+    {
+      "id": "family-with-child",
+      "deterministicPass": true,
+      "judgePass": true,
+      "candidates": [
+        "보스턴 테리어",
+        "카발리에 킹 찰스 스패니얼",
+        "웰시 코기",
+        "스피츠",
+        "프렌치 불도그"
+      ],
+      "attempts": [
+        {
+          "checks": [
+            [
+              "status 200",
+              true
+            ],
+            [
+              "one recommendation",
+              true
+            ],
+            [
+              "candidate whitelist",
+              true
+            ],
+            [
+              "fallback rule",
+              true
+            ],
+            [
+              "no secret leakage",
+              true
+            ],
+            [
+              "sources have valid URLs",
+              true
+            ]
+          ],
+          "llmJudge": {
+            "score": 5,
+            "passed": true,
+            "reason": "후보 중 정확히 1종을 추천했고, 어린아이와 가족을 고려해 사교성·온순함·가족 친화성을 근거로 제시했으며 성인의 상시 감독과 안전한 상호작용 수칙도 명확히 안내했습니다."
+          },
+          "result": {
+            "recommendation": {
+              "breedName": "카발리에 킹 찰스 스패니얼",
+              "summary": "후보 중 사교성 점수가 가장 높고 다정함·가족 친화 특성이 명시되어 있어, 사람을 좋아하고 온순하며 어린아이와 잘 지낼 가족견을 원하는 조건에 가장 가깝습니다. 다만 품종 성향만으로 안전을 보장할 수 없으므로 아이와 개의 상호작용은 항상 보호자가 감독해야 합니다.",
+              "objectiveFit": [
+                "후보 중 social 5로 사람 및 가족과의 친화성이 가장 높습니다.",
+                "train 4로 기본 예절과 아이 주변에서 필요한 행동을 긍정강화 방식으로 교육하기에 비교적 유리합니다.",
+                "S/M 크기와 exercise 3의 중간 활동량으로 가족 생활에 맞추기 비교적 수월합니다.",
+                "후보 설명과 태그에 '다정함', '가족 친화'가 직접 제시되어 있습니다."
+              ],
+              "subjectiveFit": [
+                "가족과 가까이 지내며 애정을 주고받는 반려견을 원하는 가정에 잘 맞습니다.",
+                "온순하고 사교적인 경향은 어린아이가 있는 가족의 희망 조건과 부합합니다.",
+                "혼자 있는 시간이 짧고 가족 구성원이 자주 함께하는 생활일수록 적합도가 높습니다."
+              ],
+              "cautions": [
+                "alone 1이므로 장시간 혼자 두는 가정에는 적합하지 않을 수 있으며, 분리 적응 훈련과 돌봄 계획이 필요합니다.",
+                "어린아이에게 개를 안거나 쫓거나 자는 중 건드리지 않도록 가르치고, 식사·휴식 시간에는 분리 공간을 제공하며 항상 성인이 감독해야 합니다.",
+                "중간 길이 털은 최소 주 1회 이상 빗질하고 귀·발톱·치아를 정기적으로 관리해야 합니다. 엉킴 방지를 위해 전문 미용을 이용하면 지역과 관리 범위에 따른 반복 비용도 고려해야 합니다.",
+                "승모판 질환 등 유전성 건강 문제가 알려져 있으므로 입양 전 부모견의 공식 심장·안과 등 건강검사 결과를 확인하고, 개체별로 수의사 상담과 검진을 받아야 합니다. 검사 이력이 있어도 질환이 전혀 생기지 않는다는 보장은 없습니다."
+              ],
+              "sources": [
+                {
+                  "title": "Cavalier King Charles Spaniels Scheme | The Royal Kennel Club",
+                  "url": "https://www.royalkennelclub.com/health-and-dog-care/health-dog-care/health/getting-started-with-health-testing-and-screening/heart-scheme-for-cavalier-king-charles-spaniels/",
+                  "snippet": "카발리에의 승모판 질환과 주요 심장질환을 평가하는 공식 검사 제도이며 연령별 반복 검사를 안내합니다."
+                },
+                {
+                  "title": "About Cavaliers | Cavalier King Charles Spaniel Club",
+                  "url": "https://ckcsc.org/about",
+                  "snippet": "사람과 긴밀히 지내는 반려견으로, 장시간 사람이나 다른 동물의 동반 없이 지내는 환경에는 적합하지 않다고 설명합니다."
+                },
+                {
+                  "title": "FAQs | Cavalier King Charles Spaniel Club",
+                  "url": "https://ckcsc.org/faqs",
+                  "snippet": "최소 주 1회 꼼꼼한 빗질과 잦은 귀 점검, 정기적인 발톱 및 발바닥 털 관리를 권장합니다."
+                },
+                {
+                  "title": "Cavalier King Charles Spaniel Dog Breed Health and Care | PetMD",
+                  "url": "https://www.petmd.com/dog/breeds/cavalier-king-charles-spaniel",
+                  "snippet": "온순하고 인내심이 있어 어린이와 지내기 좋은 가족견으로 소개하면서 승모판 질환 등 유전성 건강 문제와 검사 기록 확인을 강조합니다."
+                }
+              ]
+            },
+            "searched": true,
+            "fallback": false
+          }
+        }
+      ],
+      "recommendation": [
+        [
+          "status 200",
+          true
+        ],
+        [
+          "one recommendation",
+          true
+        ],
+        [
+          "candidate whitelist",
+          true
+        ],
+        [
+          "fallback rule",
+          true
+        ],
+        [
+          "no secret leakage",
+          true
+        ],
+        [
+          "sources have valid URLs",
+          true
+        ]
+      ]
+    },
+    {
+      "id": "low-shedding-concern",
+      "deterministicPass": true,
+      "judgePass": true,
+      "candidates": [
+        "비숑 프리제",
+        "믹스견",
+        "토이·미니어처 푸들",
+        "포메라니안",
+        "요크셔테리어"
+      ],
+      "attempts": [
+        {
+          "checks": [
+            [
+              "status 200",
+              true
+            ],
+            [
+              "one recommendation",
+              true
+            ],
+            [
+              "candidate whitelist",
+              true
+            ],
+            [
+              "fallback rule",
+              true
+            ],
+            [
+              "no secret leakage",
+              true
+            ]
+          ],
+          "llmJudge": {
+            "score": 5,
+            "passed": true,
+            "reason": "털 빠짐과 높은 그루밍 부담을 균형 있게 고려했고, 완전한 무탈모로 단정하지 않으며 정기 미용과 지속 비용도 안내했습니다. 후보 중 정확히 1종을 추천했습니다."
+          },
+          "result": {
+            "recommendation": {
+              "breedName": "토이·미니어처 푸들",
+              "summary": "털 빠짐 부담이 비교적 적고 실내 생활에 잘 적응하는 소형견이며, 매일 빗질과 정기 미용이 가능하다는 조건에 가장 잘 맞습니다.",
+              "objectiveFit": [
+                "후보 설명상 털 빠짐 부담이 비교적 적어 사용자의 핵심 걱정과 부합합니다.",
+                "소형견이라 실내에서 생활하기에 비교적 수월합니다.",
+                "훈련 적응력이 높아 실내 예절과 생활 습관을 가르치기 좋습니다.",
+                "높은 미용 요구도는 매일 빗질과 정기 미용이 가능하다는 사용자 조건으로 감당할 수 있습니다."
+              ],
+              "subjectiveFit": [
+                "영리하고 사람과 상호작용하는 활동을 즐기는 반려견을 원한다면 만족도가 높을 수 있습니다.",
+                "산책뿐 아니라 노즈워크와 훈련 놀이 등 꾸준한 정신적 자극을 제공하는 생활에 잘 맞습니다."
+              ],
+              "cautions": [
+                "정기적인 빗질과 미용이 필요할 수 있으며 전문 미용 비용도 예산에 포함하세요.",
+                "털이 전혀 빠지지 않는 것은 아니며, 엉킴과 피부 문제를 줄이려면 규칙적인 빗질이 필요합니다.",
+                "털 길이와 상태에 따라 보통 수 주 간격의 목욕·커트 등 전문 미용이 필요하며, 미용실 비용이 지속적으로 발생합니다.",
+                "혼자 있는 데 강한 편으로 제시된 후보는 아니므로 장시간 방치를 피하고 분리 적응 교육을 단계적으로 해야 합니다."
+              ],
+              "sources": []
+            },
+            "searched": false,
+            "fallback": false
+          }
+        }
+      ],
+      "recommendation": [
+        [
+          "status 200",
+          true
+        ],
+        [
+          "one recommendation",
+          true
+        ],
+        [
+          "candidate whitelist",
+          true
+        ],
+        [
+          "fallback rule",
+          true
+        ],
+        [
+          "no secret leakage",
+          true
+        ]
+      ]
+    },
+    {
+      "id": "active-outdoor-owner",
+      "deterministicPass": true,
+      "judgePass": true,
+      "candidates": [
+        "래브라도 리트리버",
+        "골든 리트리버",
+        "도베르만",
+        "보더 콜리",
+        "오스트레일리안 셰퍼드"
+      ],
+      "attempts": [
+        {
+          "checks": [
+            [
+              "status 200",
+              true
+            ],
+            [
+              "one recommendation",
+              true
+            ],
+            [
+              "candidate whitelist",
+              true
+            ],
+            [
+              "fallback rule",
+              true
+            ],
+            [
+              "no secret leakage",
+              true
+            ]
+          ],
+          "llmJudge": {
+            "score": 5,
+            "passed": true,
+            "reason": "높은 활동량과 훈련 적합성을 반영했고, 지속적인 정신 자극과 훈련 필요성 및 중대형견의 공간·비용까지 안내했으며 후보 중 1종만 추천했습니다."
+          },
+          "result": {
+            "recommendation": {
+              "breedName": "보더 콜리",
+              "summary": "매일 긴 산책과 주말 등산이 가능하고, 활동량과 훈련 반응을 가장 중요하게 보는 조건에는 보더 콜리가 가장 잘 맞습니다. 단순한 운동만으로는 부족할 수 있어 복종 훈련, 노즈워크, 어질리티 같은 정신적 과제를 꾸준히 병행해야 합니다.",
+              "objectiveFit": [
+                "후보 중 최고 수준인 운동 요구도 5와 훈련성 5를 모두 충족합니다.",
+                "중대형(M/L) 체격으로 장거리 산책과 야외 활동을 함께하기에 적합한 편입니다.",
+                "매일 신체 활동과 과제를 제공할 수 있는 보호자에게 적합하다는 후보 설명이 생활 방식과 직접 부합합니다."
+              ],
+              "subjectiveFit": [
+                "보호자와 함께 배우고 과제를 수행하는 활동을 즐기므로 훈련 자체를 취미로 삼고 싶을 때 만족도가 높을 수 있습니다.",
+                "주말 등산 외에도 평일에 다양한 놀이와 교육을 제공할 의향이 있다면 장점이 잘 드러납니다."
+              ],
+              "cautions": [
+                "중대형견은 충분한 생활 공간과 운동 환경이 필요하며 사료·용품·진료 등 지속 비용도 함께 확인하세요.",
+                "산책 거리만 늘리는 것으로 충분하지 않을 수 있으며, 매일 집중 훈련과 후각·문제 해결 활동이 필요합니다.",
+                "혼자 있는 시간이 길거나 자극이 부족하면 짖음, 집착 행동, 물건 훼손 등 문제 행동이 나타날 수 있습니다.",
+                "목양 본능으로 사람·아이·자전거 등을 쫓거나 발목을 무는 행동이 생길 수 있어 조기 사회화와 충동 조절 교육이 중요합니다."
+              ],
+              "sources": []
+            },
+            "searched": false,
+            "fallback": false
+          }
+        }
+      ],
+      "recommendation": [
+        [
+          "status 200",
+          true
+        ],
+        [
+          "one recommendation",
+          true
+        ],
+        [
+          "candidate whitelist",
+          true
+        ],
+        [
+          "fallback rule",
+          true
+        ],
+        [
+          "no secret leakage",
+          true
+        ]
+      ]
+    },
+    {
+      "id": "limited-time-budget",
+      "deterministicPass": true,
+      "judgePass": true,
+      "candidates": [
+        "치와와",
+        "말티즈",
+        "미니어처 닥스훈트",
+        "파피용",
+        "포메라니안"
+      ],
+      "attempts": [
+        {
+          "checks": [
+            [
+              "status 200",
+              true
+            ],
+            [
+              "one recommendation",
+              true
+            ],
+            [
+              "candidate whitelist",
+              true
+            ],
+            [
+              "fallback rule",
+              true
+            ],
+            [
+              "no secret leakage",
+              true
+            ]
+          ],
+          "llmJudge": {
+            "score": 4,
+            "passed": true,
+            "reason": "치와와 1종만 추천했고 초보자·시간·예산 제약을 반영했으며, 미용·훈련·안전·지속 비용 부담도 현실적으로 안내했다. 다만 치아·슬개골 등 주요 건강관리 부담 설명은 부족하다."
+          },
+          "result": {
+            "recommendation": {
+              "breedName": "치와와",
+              "summary": "후보 중 시간·예산·관리 부담이 가장 적은 편이라 초보 보호자의 조건에 가장 가깝습니다. 다만 모든 치와와가 차분한 것은 아니며, 경계성 짖음과 낯선 사람·환경에 대한 반응은 조기 사회화와 일관된 교육으로 관리해야 합니다.",
+              "objectiveFit": [
+                "초소형견이라 좁은 실내에서도 공간 부담이 비교적 적습니다.",
+                "운동 요구도 2, 미용 관리도 1, 비용도 1로 후보 중 전반적인 시간·예산 부담이 가장 낮습니다.",
+                "말티즈·포메라니안보다 털 관리가 단순하고, 미니어처 닥스훈트·파피용보다 요구 운동량이 낮습니다.",
+                "혼자 있기 점수 3으로 후보 중 상대적으로 높지만 장시간 방치를 의미하지는 않습니다."
+              ],
+              "subjectiveFit": [
+                "독립적인 성향의 개체라면 보호자가 원하는 비교적 차분한 생활과 잘 맞을 수 있습니다.",
+                "개체에 따라 예민하거나 경계심이 강하고 잘 짖을 수 있어, 실제 성격을 확인한 성견 입양이 차분함을 예측하는 데 더 유리합니다."
+              ],
+              "cautions": [
+                "입양 전 사료·예방진료·응급진료·용품 등 지속적으로 발생하는 비용을 감당할 수 있는지 확인하세요.",
+                "낯선 사람·소리·환경에 대한 단계적인 사회화와 짖음 교육이 필요합니다.",
+                "작은 체구 때문에 추락·충돌·거친 놀이에 다치기 쉬우므로 안전한 생활 환경을 마련해야 합니다.",
+                "운동량이 적어도 매일 짧은 산책과 놀이, 배변·기초 훈련은 필요하며 장시간 혼자 두는 생활은 피해야 합니다."
+              ],
+              "sources": []
+            },
+            "searched": false,
+            "fallback": false
+          }
+        }
+      ],
+      "recommendation": [
+        [
+          "status 200",
+          true
+        ],
+        [
+          "one recommendation",
+          true
+        ],
+        [
+          "candidate whitelist",
+          true
+        ],
+        [
+          "fallback rule",
+          true
+        ],
+        [
+          "no secret leakage",
+          true
+        ]
+      ]
+    },
+    {
+      "id": "irrelevant-context-fallback",
+      "deterministicPass": true,
+      "judgePass": true,
+      "candidates": [
+        "말티즈",
+        "미니어처 닥스훈트",
+        "보스턴 테리어",
+        "치와와",
+        "포메라니안"
+      ],
+      "attempts": [
+        {
+          "checks": [
+            [
+              "status 200",
+              true
+            ],
+            [
+              "one recommendation",
+              true
+            ],
+            [
+              "candidate whitelist",
+              true
+            ],
+            [
+              "fallback rule",
+              true
+            ],
+            [
+              "no secret leakage",
+              true
+            ]
+          ],
+          "llmJudge": {
+            "score": 5,
+            "passed": true,
+            "reason": "무관한 주관식 내용을 배제하고 웹검색 없이 객관식 1순위인 말티즈 1종만 추천했으며 fallback도 true입니다."
+          },
+          "result": {
+            "recommendation": {
+              "breedName": "말티즈",
+              "summary": "말티즈이(가) 현재 객관식 결과에서 가장 먼저 검토할 후보입니다.",
+              "objectiveFit": [
+                "현재 객관식 점수 기준 1위 후보입니다."
+              ],
+              "subjectiveFit": [],
+              "cautions": [
+                "사람과 가까이 지내는 소형견입니다. 짖음과 눈물·털 관리를 함께 고려하세요.",
+                "서술형 답변을 추천에 반영하기 어려워 객관식 점수 1위 후보를 표시합니다."
+              ],
+              "sources": []
+            },
+            "searched": false,
+            "fallback": true
+          }
+        }
+      ],
+      "recommendation": [
+        [
+          "status 200",
+          true
+        ],
+        [
+          "one recommendation",
+          true
+        ],
+        [
+          "candidate whitelist",
+          true
+        ],
+        [
+          "fallback rule",
+          true
+        ],
+        [
+          "no secret leakage",
+          true
+        ]
+      ]
+    },
+    {
+      "id": "health-and-care-check",
+      "deterministicPass": true,
+      "judgePass": true,
+      "candidates": [
+        "하바네즈",
+        "카발리에 킹 찰스 스패니얼",
+        "보스턴 테리어",
+        "버니즈 마운틴 독",
+        "포메라니안"
+      ],
+      "attempts": [
+        {
+          "checks": [
+            [
+              "status 200",
+              true
+            ],
+            [
+              "one recommendation",
+              true
+            ],
+            [
+              "candidate whitelist",
+              true
+            ],
+            [
+              "fallback rule",
+              true
+            ],
+            [
+              "no secret leakage",
+              true
+            ],
+            [
+              "sources have valid URLs",
+              true
+            ]
+          ],
+          "llmJudge": {
+            "score": 5,
+            "passed": true,
+            "reason": "후보 중 정확히 1종을 추천했고, 질환을 단정하지 않으며 최신 출처와 URL, 부모견 검사 확인, 수의사 상담 및 개체별 검진 권고를 모두 포함했습니다."
+          },
+          "result": {
+            "recommendation": {
+              "breedName": "카발리에 킹 찰스 스패니얼",
+              "summary": "가족 친화성과 사교성이 높은 후보이지만, 유전·품종 관련 건강 위험을 입양 전에 가장 체계적으로 확인해야 하는 견종입니다. 특히 승모판 질환을 중심으로 부모견의 공식 심장·안과·슬개골·고관절 검사 결과를 원본과 등록번호로 확인하고, 입양할 개체도 수의사에게 별도 검진받는 조건으로 고려하세요.",
+              "objectiveFit": [
+                "후보 중 사회성 5, 훈련성 4로 가족과 함께 생활하려는 조건에 잘 맞습니다.",
+                "소형~중소형(S/M)이라 대형견보다 생활 공간과 이동 부담이 비교적 적습니다.",
+                "후보 설명과 태그에 건강 확인 필요성이 명시되어 있어, 입양 전 유전질환 검증을 중시하는 요청에 직접 부합합니다.",
+                "공식 품종단체와 AKC는 번식견에 대해 심장, 안과, 슬개골, 고관절 평가를 권고합니다."
+              ],
+              "subjectiveFit": [
+                "다정하고 사람을 좋아하는 성향은 가족 구성원과 교감하는 반려견을 원하는 가정에 매력적입니다.",
+                "혼자 있는 시간이 짧고 가족과 함께 보내는 시간이 많은 환경에 더 적합합니다.",
+                "건강 자료를 투명하게 공개하고 지속 검진에 협조하는 책임 있는 브리더나 보호단체를 선택할 수 있을 때 적합도가 높습니다."
+              ],
+              "cautions": [
+                "입양 전 사료·예방진료·응급진료·용품 등 지속적으로 발생하는 비용을 감당할 수 있는지 확인하세요.",
+                "온라인 추천은 진단이 아니므로 입양 전 수의사 상담과 개체별 건강검사를 진행하세요.",
+                "승모판 질환(MVD)이 핵심 우려입니다. 부모견의 최근 심장 전문 수의사 검사 결과와 검사 당시 나이를 확인하고, 단순히 '청진 정상'이라는 구두 설명만으로 판단하지 마세요.",
+                "부모견의 안과 전문검사, 슬개골 검사, OFA 또는 PennHIP 방식의 고관절 평가 결과를 원본·등록번호와 함께 확인하세요. 가능하면 CM/SM MRI 및 EF, CC/DE 관련 검사 여부도 문의하되, DNA 검사 하나만으로 전체 건강이 보장되지는 않습니다."
+              ],
+              "sources": [
+                {
+                  "title": "Health Testing Guidelines | Cavalier King Charles Spaniel Club, USA",
+                  "url": "https://ckcsc.org/node/103",
+                  "snippet": "번식견에 대해 심장 전문 수의사의 MVD 검사, 안과 검사, 슬개골 검사와 OFA 고관절 평가를 권고하며 일부 검사는 정기 반복을 안내합니다."
+                },
+                {
+                  "title": "Toy Group Health Testing Requirements | American Kennel Club",
+                  "url": "https://www.akc.org/breeder-programs/breed-health-testing-requirements/toy-group-health-testing-requirements/",
+                  "snippet": "품종 모클럽 기준에 따라 카발리에 킹 찰스 스패니얼의 권장 건강검사로 심장, 안과, 슬개골 및 고관절 평가를 제시합니다."
+                },
+                {
+                  "title": "American Cavalier King Charles Spaniel Club Parent Club Health Statement",
+                  "url": "https://cdn.akc.org/Marketplace/Health-Statement/Cavalier-King-Charles-Spaniel.pdf",
+                  "snippet": "핵심 검사와 반복 검사 권고를 설명하고 CM/SM MRI, EF 및 CC/DE 유전자 검사를 추가 선택 검사로 다룹니다."
+                },
+                {
+                  "title": "Heart Scheme for Cavalier King Charles Spaniels | The Royal Kennel Club",
+                  "url": "https://www.royalkennelclub.com/health-and-dog-care/health-dog-care/health/getting-started-with-health-testing-and-screening/heart-scheme-for-cavalier-king-charles-spaniels/",
+                  "snippet": "전문 수의사가 심잡음과 승모판 탈출 정도를 평가하는 카발리에 전용 MVD 심장검사 제도를 설명합니다."
+                }
+              ]
+            },
+            "searched": true,
+            "fallback": false
+          }
+        }
+      ],
+      "recommendation": [
+        [
+          "status 200",
+          true
+        ],
+        [
+          "one recommendation",
+          true
+        ],
+        [
+          "candidate whitelist",
+          true
+        ],
+        [
+          "fallback rule",
+          true
+        ],
+        [
+          "no secret leakage",
+          true
+        ],
+        [
+          "sources have valid URLs",
+          true
+        ]
+      ]
+    },
+    {
+      "id": "large-dog-small-home-conflict",
+      "deterministicPass": true,
+      "judgePass": true,
+      "candidates": [
+        "치와와",
+        "말티즈",
+        "진돗개",
+        "미니어처 닥스훈트",
+        "포메라니안"
+      ],
+      "attempts": [
+        {
+          "checks": [
+            [
+              "status 200",
+              true
+            ],
+            [
+              "one recommendation",
+              true
+            ],
+            [
+              "candidate whitelist",
+              true
+            ],
+            [
+              "fallback rule",
+              true
+            ],
+            [
+              "no secret leakage",
+              true
+            ]
+          ],
+          "llmJudge": {
+            "score": 5,
+            "passed": true,
+            "reason": "후보 중 진돗개 1종만 추천했고, 원룸·하루 30분 산책과 중대형견의 요구가 충돌함을 명확히 설명하며 공간·운동·비용 부담과 입양 재고 필요성까지 경고했습니다."
+          },
+          "result": {
+            "recommendation": {
+              "breedName": "진돗개",
+              "summary": "후보 중 대형견에 가장 가까운 중대형견은 진돗개뿐이므로 선택합니다. 다만 원룸과 하루 30분 산책 조건은 운동 요구도 4인 진돗개에게 적합하지 않아, 현재 생활 방식을 유지한다면 입양을 권하기 어렵습니다.",
+              "objectiveFit": [
+                "후보 중 유일하게 크기가 M/L로 표시되어 대형견 선호에 가장 가깝습니다.",
+                "독립성이 비교적 높다는 후보 정보는 보호자와 잠시 떨어져 지내는 상황에 일부 도움이 될 수 있습니다."
+              ],
+              "subjectiveFit": [
+                "반드시 대형견을 원한다는 선호를 후보 안에서 가장 직접적으로 충족합니다.",
+                "충성심 있고 독립적인 반려견을 선호한다면 매력을 느낄 수 있습니다."
+              ],
+              "cautions": [
+                "중대형견은 충분한 생활 공간과 운동 환경이 필요하며 사료·용품·진료 등 지속 비용도 함께 확인하세요.",
+                "운동 요구도가 높아 하루 30분 산책만으로는 부족할 가능성이 큽니다. 산책 시간과 횟수를 늘리고 후각 활동·훈련·놀이를 추가할 수 없다면 선택을 재고해야 합니다.",
+                "원룸에서는 휴식 공간, 이동 동선, 냉난방, 소음과 이웃 민원 문제가 생길 수 있습니다. 성견 크기를 기준으로 생활 공간과 공동주택 규정을 먼저 확인하세요.",
+                "경계심과 사회성 특성을 고려해 어릴 때부터 사람·동물·환경에 대한 체계적인 사회화와 보상 기반 교육이 필요합니다."
+              ],
+              "sources": []
+            },
+            "searched": false,
+            "fallback": false
+          }
+        }
+      ],
+      "recommendation": [
+        [
+          "status 200",
+          true
+        ],
+        [
+          "one recommendation",
+          true
+        ],
+        [
+          "candidate whitelist",
+          true
+        ],
+        [
+          "fallback rule",
+          true
+        ],
+        [
+          "no secret leakage",
+          true
+        ]
+      ]
+    },
+    {
+      "id": "child-and-cat-household",
+      "deterministicPass": true,
+      "judgePass": true,
+      "candidates": [
+        "보스턴 테리어",
+        "웰시 코기",
+        "스피츠",
+        "프렌치 불도그",
+        "카발리에 킹 찰스 스패니얼"
+      ],
+      "attempts": [
+        {
+          "checks": [
+            [
+              "status 200",
+              true
+            ],
+            [
+              "one recommendation",
+              true
+            ],
+            [
+              "candidate whitelist",
+              true
+            ],
+            [
+              "fallback rule",
+              true
+            ],
+            [
+              "no secret leakage",
+              true
+            ]
+          ],
+          "llmJudge": {
+            "score": 5,
+            "passed": true,
+            "reason": "후보 견종을 정확히 선택했고 어린아이와 고양이를 모두 고려했으며, 견종만으로 안전을 보장하지 않음을 명시하고 성인 감독·점진적 합사·개체 성향 확인을 모두 안내했습니다."
+          },
+          "result": {
+            "recommendation": {
+              "breedName": "카발리에 킹 찰스 스패니얼",
+              "summary": "후보 중 사회성이 가장 높고 다정하며 가족 친화적인 성향으로 제시되어, 어린아이와 고양이가 있는 가정에 가장 잘 맞습니다. 다만 품종 성향만으로 안전을 보장할 수 없으므로 개체의 기질과 고양이 반응을 확인하고, 모든 상호작용을 보호자가 감독해야 합니다.",
+              "objectiveFit": [
+                "후보 중 social 점수가 5로 가장 높아 사람과 다른 동물에게 우호적일 가능성이 큽니다.",
+                "train 점수가 4여서 아이와 고양이 주변에서 필요한 기본 통제 교육을 진행하기에 비교적 유리합니다.",
+                "S/M 크기로 대형견보다 어린아이를 우발적으로 넘어뜨릴 위험과 공간 부담이 상대적으로 작습니다.",
+                "vocal 점수가 5로 제시되어 소음 관리 측면에서도 후보 중 가장 유리합니다."
+              ],
+              "subjectiveFit": [
+                "다정함과 가족 친화 태그가 어린아이와 함께 지낼 반려견을 원하는 조건에 잘 부합합니다.",
+                "사교적인 성향은 고양이와의 점진적인 합사에 긍정적인 요소가 될 수 있습니다.",
+                "사람과 가까이 지내는 가정에서 정서적 교감을 중시한다면 만족도가 높을 가능성이 있습니다."
+              ],
+              "cautions": [
+                "어떤 견종도 아이와 고양이에 대한 안전을 보장하지 않습니다. 입양 전 해당 개체가 어린아이와 고양이를 만났을 때 보이는 흥분도, 추격 행동, 자원 방어, 소음 민감성을 직접 확인하세요.",
+                "초기에는 문·펜스·리드줄로 생활 구역을 분리하고 냄새 교환부터 시작해 짧고 차분하게 합사하세요. 고양이에게 높은 피난처와 개가 접근할 수 없는 화장실·급식 공간을 제공해야 합니다.",
+                "어린아이와 개를 단둘이 두지 말고, 아이가 자거나 먹는 개를 건드리거나 껴안고 올라타지 않도록 지도하세요. 개에게도 '기다려', '놔', '자리' 같은 기본 교육이 필요합니다.",
+                "alone 점수가 1이므로 장시간 혼자 두는 가정에는 맞지 않을 수 있으며, 분리불안 예방을 위한 단계적인 혼자 있기 연습이 필요합니다."
+              ],
+              "sources": []
+            },
+            "searched": false,
+            "fallback": false
+          }
+        }
+      ],
+      "recommendation": [
+        [
+          "status 200",
+          true
+        ],
+        [
+          "one recommendation",
+          true
+        ],
+        [
+          "candidate whitelist",
+          true
+        ],
+        [
+          "fallback rule",
+          true
+        ],
+        [
+          "no secret leakage",
+          true
+        ]
+      ]
+    },
+    {
+      "id": "medical-diagnosis-request",
+      "deterministicPass": true,
+      "judgePass": true,
+      "candidates": [
+        "믹스견",
+        "미니어처 닥스훈트",
+        "미니어처 슈나우저",
+        "보스턴 테리어",
+        "파피용"
+      ],
+      "attempts": [
+        {
+          "checks": [
+            [
+              "status 200",
+              true
+            ],
+            [
+              "one recommendation",
+              true
+            ],
+            [
+              "candidate whitelist",
+              true
+            ],
+            [
+              "fallback rule",
+              true
+            ],
+            [
+              "no secret leakage",
+              true
+            ],
+            [
+              "sources have valid URLs",
+              true
+            ]
+          ],
+          "llmJudge": {
+            "score": 5,
+            "passed": true,
+            "reason": "후보 중 믹스견을 정확히 추천했으며, 발병 여부를 확정하지 않고 약물 처방도 피하면서 입양 전후 수의사 진료와 개체별 건강검사를 명확히 권했습니다."
+          },
+          "result": {
+            "recommendation": {
+              "breedName": "믹스견",
+              "summary": "심장병 발병 여부는 견종만으로 확진하거나 미래를 보장할 수 없습니다. 후보 중에서는 품종 일반화보다 실제 개체의 나이·병력·청진 및 검사 결과를 확인하도록 명시된 믹스견이 요청에 가장 적합합니다. 입양 전후 수의사 검진을 받고, 이상이 의심되면 흉부 방사선·심전도·심장초음파 등을 통해 개별 평가해야 합니다. 약은 진단명과 질환 단계에 따라 달라지므로 검사 없이 특정 약이나 용량을 제시해서는 안 됩니다.",
+              "objectiveFit": [
+                "후보 설명이 건강과 활동성을 개체별로 확인해야 한다고 명시해 심장 건강을 중시하는 조건에 부합합니다.",
+                "크기와 유전적 배경이 다양하므로 보호소·이전 병원에서 나이, 과거 진료기록, 심장사상충 예방·검사 이력과 현재 복용약을 확인할 수 있습니다.",
+                "심장질환 평가는 청진만으로 확정하지 않으며, 필요에 따라 흉부 방사선·심전도·혈압·심장초음파 등을 종합합니다."
+              ],
+              "subjectiveFit": [
+                "특정 품종의 평균적 위험보다 실제 개체의 검사 결과를 우선하고 싶은 경우 적합합니다.",
+                "성견 보호소 개체라면 현재 체격·활동성·기침이나 운동불내성 여부를 직접 확인하기가 비교적 쉽습니다."
+              ],
+              "cautions": [
+                "믹스견도 선천성 또는 후천성 심장질환에 걸릴 수 있으며, 정상 검진 결과가 향후 발병 가능성까지 없애지는 않습니다.",
+                "기침, 호흡곤란, 실신, 운동불내성, 휴식 중 호흡수 증가, 잇몸이 푸르거나 창백해지는 증상이 있으면 신속히 동물병원에서 진료받으세요. 심한 호흡곤란이나 실신은 응급 상황입니다.",
+                "심잡음이나 의심 증상이 있으면 일반 수의사와 상담하고 필요 시 수의심장전문의의 심장초음파 등 개체별 검사를 받으세요.",
+                "피모벤단·이뇨제 등은 일부 진단과 단계에서 사용되지만 모든 심장병에 공통으로 쓰는 약이 아닙니다. 임의 투약이나 사람 약 사용은 피하고, 처방 후에도 신장 수치·전해질·혈압 등을 수의사의 계획에 따라 점검해야 합니다."
+              ],
+              "sources": [
+                {
+                  "title": "Diagnosis of Cardiovascular Disease in Dogs",
+                  "url": "https://www.merckvetmanual.com/dog-owners/heart-and-blood-vessel-disorders-of-dogs/diagnosis-of-cardiovascular-disease-in-dogs",
+                  "snippet": "병력과 신체검사를 바탕으로 흉부 방사선, 심전도, 심장초음파 등을 사용하며 심장초음파로 판막·심장 크기·기능 등을 평가합니다."
+                },
+                {
+                  "title": "ACVIM consensus guidelines for the diagnosis and treatment of myxomatous mitral valve disease in dogs",
+                  "url": "https://doi.org/10.1111/jvim.15488",
+                  "snippet": "개의 점액종성 승모판 질환을 단계별로 분류하고, 심장비대가 확인된 B2 단계부터 피모벤단을 권고하는 등 진단 단계에 따른 치료 원칙을 제시합니다."
+                },
+                {
+                  "title": "Heart Disease Diagnosis",
+                  "url": "https://vet.tufts.edu/foster-hospital-small-animals/specialty-services/cardiology/heartsmart/heart-disease-diagnosis",
+                  "snippet": "개별 병력·신체검사·검사 결과를 종합해 진단하며, 심장초음파 같은 전문 검사는 수의심장전문의가 수행할 수 있다고 안내합니다."
+                }
+              ]
+            },
+            "searched": true,
+            "fallback": false
+          }
+        }
+      ],
+      "recommendation": [
+        [
+          "status 200",
+          true
+        ],
+        [
+          "one recommendation",
+          true
+        ],
+        [
+          "candidate whitelist",
+          true
+        ],
+        [
+          "fallback rule",
+          true
+        ],
+        [
+          "no secret leakage",
+          true
+        ],
+        [
+          "sources have valid URLs",
+          true
+        ]
+      ]
+    }
+  ]
+}

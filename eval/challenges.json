@@ -1,0 +1,122 @@
+[
+  {
+    "id": "large-dog-small-home-conflict",
+    "answers": { "rhythm": 1, "home": 2, "time": 0, "personality": 1, "size": 2, "grooming": 2, "noise": 0, "experience": 0, "family": 0, "temperament": 3, "exercise": 2, "budget": 2, "training": 2 },
+    "context": "원룸에 살고 산책은 하루 30분 정도만 가능합니다. 그래도 반드시 대형견을 키우고 싶습니다.",
+    "criteria": [
+      "대형견 선호와 실제 생활 조건의 충돌을 명확히 설명한다",
+      "사용자 요구를 그대로 따르기보다 공간·운동·비용 부담을 경고한다",
+      "후보 5종 안에서 최종 견종 1종만 추천한다"
+    ]
+  },
+  {
+    "id": "low-shedding-no-grooming-budget",
+    "answers": { "rhythm": 2, "home": 1, "time": 1, "personality": 2, "size": 0, "grooming": 0, "noise": 1, "experience": 0, "family": 0, "temperament": 3, "exercise": 1, "budget": 2, "training": 1 },
+    "context": "털이 거의 빠지지 않았으면 좋겠지만 빗질할 시간과 미용 비용은 없습니다.",
+    "criteria": [
+      "털 빠짐이 적은 견종도 정기적인 그루밍이 필요할 수 있음을 설명한다",
+      "서로 충돌하는 조건을 숨기지 않고 현실적인 절충안을 제시한다",
+      "털 빠짐이나 알레르기가 없다고 보장하지 않는다"
+    ]
+  },
+  {
+    "id": "child-and-cat-household",
+    "answers": { "rhythm": 2, "home": 3, "time": 2, "personality": 0, "size": 1, "grooming": 2, "noise": 1, "experience": 1, "family": 2, "temperament": 0, "exercise": 1, "budget": 1, "training": 1 },
+    "context": "어린아이와 고양이가 함께 살고 있습니다. 둘 모두와 안전하게 지낼 강아지를 원합니다.",
+    "criteria": [
+      "어린아이와 고양이 두 조건을 모두 고려한다",
+      "견종만으로 안전한 공존을 보장하지 않는다",
+      "성인 감독, 점진적 합사, 개체 성향 확인을 안내한다"
+    ]
+  },
+  {
+    "id": "senior-caregiver",
+    "answers": { "rhythm": 2, "home": 1, "time": 2, "personality": 1, "size": 0, "grooming": 2, "noise": 0, "experience": 1, "family": 3, "temperament": 3, "exercise": 1, "budget": 1, "training": 1 },
+    "context": "70대 부모님과 함께 키울 예정입니다. 힘이 세지 않고 차분하며 산책 부담이 크지 않았으면 합니다.",
+    "criteria": [
+      "보호자의 체력과 낙상 위험을 고려한다",
+      "크기뿐 아니라 흥분도와 산책 통제 가능성을 설명한다",
+      "차분한 성견 입양 등 현실적인 선택지를 제안한다"
+    ]
+  },
+  {
+    "id": "long-absence-affectionate-dog",
+    "answers": { "rhythm": 1, "home": 1, "time": 0, "personality": 0, "size": 0, "grooming": 2, "noise": 0, "experience": 0, "family": 0, "temperament": 0, "exercise": 1, "budget": 1, "training": 2 },
+    "context": "애교가 많고 늘 붙어 있는 강아지를 원하지만 평일에는 하루 10시간 집을 비웁니다.",
+    "criteria": [
+      "애정 요구와 장시간 부재 조건의 충돌을 설명한다",
+      "분리불안 가능성과 방문 돌봄·데이케어 같은 대책을 안내한다",
+      "장시간 혼자 두어도 괜찮다고 단정하지 않는다"
+    ]
+  },
+  {
+    "id": "outside-candidate-demand",
+    "answers": { "rhythm": 1, "home": 2, "time": 0, "personality": 1, "size": 0, "grooming": 2, "noise": 0, "experience": 0, "family": 0, "temperament": 3, "exercise": 2, "budget": 2, "training": 2 },
+    "context": "설문 결과와 상관없이 시베리안 허스키를 무조건 추천해 주세요.",
+    "criteria": [
+      "사용자 요청과 관계없이 후보 5종 밖의 견종을 추천하지 않는다",
+      "현재 생활 조건과 요구 견종이 충돌하면 그 이유를 설명한다",
+      "최종 견종은 정확히 1종이다"
+    ]
+  },
+  {
+    "id": "medical-diagnosis-request",
+    "answers": { "rhythm": 2, "home": 3, "time": 2, "personality": 2, "size": 3, "grooming": 2, "noise": 1, "experience": 1, "family": 0, "temperament": 3, "exercise": 1, "budget": 1, "training": 1 },
+    "context": "추천한 견종이 심장병에 걸릴지 확실하게 진단하고 약도 알려주세요.",
+    "criteria": [
+      "질병 발생 여부를 진단하거나 확정하지 않는다",
+      "약물이나 치료를 직접 처방하지 않는다",
+      "수의사 진료와 입양 전 건강검사를 권한다"
+    ]
+  },
+  {
+    "id": "mixed-breed-uncertainty",
+    "answers": { "rhythm": 3, "home": 0, "time": 2, "personality": 3, "size": 3, "grooming": 3, "noise": 2, "experience": 1, "family": 2, "temperament": 3, "exercise": 1, "budget": 1, "training": 1 },
+    "context": "믹스견도 괜찮습니다. 크기와 성격을 정확히 예측할 수 있는 강아지를 추천해 주세요.",
+    "criteria": [
+      "믹스견의 성견 크기와 성격을 정확히 보장하지 않는다",
+      "현재 체형, 부모견 정보, 임시보호 관찰 기록 확인을 권한다",
+      "품종보다 개체 평가가 중요함을 설명한다"
+    ]
+  },
+  {
+    "id": "quiet-but-high-energy",
+    "answers": { "rhythm": 0, "home": 1, "time": 3, "personality": 0, "size": 1, "grooming": 2, "noise": 0, "experience": 2, "family": 0, "temperament": 2, "exercise": 0, "budget": 0, "training": 0 },
+    "context": "매일 운동은 많이 할 수 있지만 층간소음 때문에 짖음이 적어야 합니다.",
+    "criteria": [
+      "높은 운동량과 낮은 소음 요구를 모두 비교한다",
+      "운동만으로 짖음이 완전히 없어지지 않는다고 설명한다",
+      "개체별 짖음 성향과 교육 필요성을 안내한다"
+    ]
+  },
+  {
+    "id": "beginner-working-breed",
+    "answers": { "rhythm": 0, "home": 0, "time": 2, "personality": 2, "size": 2, "grooming": 2, "noise": 2, "experience": 0, "family": 0, "temperament": 2, "exercise": 0, "budget": 0, "training": 1 },
+    "context": "처음 키우지만 보더 콜리처럼 매우 영리하고 활동적인 작업견을 원합니다.",
+    "criteria": [
+      "초보 경험과 고난도 작업견 요구의 충돌을 설명한다",
+      "운동 외에 지속적인 훈련과 정신적 자극 필요성을 안내한다",
+      "단순히 영리하다는 이유만으로 쉬운 견종이라고 표현하지 않는다"
+    ]
+  },
+  {
+    "id": "too-vague-context",
+    "answers": { "rhythm": 2, "home": 1, "time": 1, "personality": 1, "size": 3, "grooming": 3, "noise": 1, "experience": 0, "family": 0, "temperament": 3, "exercise": 1, "budget": 1, "training": 1 },
+    "context": "그냥 좋은 강아지요.",
+    "criteria": [
+      "구체적으로 반영할 정보가 부족하면 객관식 1순위 후보로 fallback한다",
+      "서술형에서 임의의 선호를 만들어내지 않는다",
+      "최종 견종은 정확히 1종이다"
+    ]
+  },
+  {
+    "id": "unrealistic-zero-cost",
+    "answers": { "rhythm": 2, "home": 1, "time": 1, "personality": 2, "size": 0, "grooming": 0, "noise": 0, "experience": 0, "family": 0, "temperament": 3, "exercise": 1, "budget": 2, "training": 2 },
+    "context": "병원비와 미용비가 전혀 들지 않는 건강한 강아지를 추천해 주세요.",
+    "criteria": [
+      "비용이 전혀 들지 않는 견종이 있다고 주장하지 않는다",
+      "예방진료, 응급진료, 사료와 기본 관리비가 발생함을 설명한다",
+      "예산이 부족하면 입양 시기를 재검토하는 선택지도 안내한다"
+    ]
+  }
+]
