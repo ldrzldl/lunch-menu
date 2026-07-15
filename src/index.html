@@ -3,39 +3,122 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="나의 성향과 생활환경에 가까운 강아지 품종을 찾아보는 퀴즈">
-  <title>멍BTI — AI 성향 기반 견종 추천</title>
+  <meta name="description" content="생활 조건을 직접 조정해 어울리는 견종을 찾아보는 결정적 매칭 도구">
+  <title>멍BTI — 조건 기반 견종 매칭</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <main class="app-shell">
     <header class="hero">
       <div class="brand">멍<span>BTI</span></div>
-      <p class="eyebrow">AI 성향 기반 견종 추천</p>
-      <h1>나와 잘 맞을 강아지는<br><em>어떤 친구</em>일까요?</h1>
-      <p class="hero-copy">나의 생활 리듬과 성향을 바탕으로<br>40종의 견종 중 가장 가까운 세 친구를 찾아드려요.</p>
+      <p class="eyebrow">DETERMINISTIC BREED MATCHING</p>
+      <h1>내 생활에 맞는 조건을<br><em>직접 골라보세요</em></h1>
+      <p class="hero-copy">절대 조건으로 후보를 추리고, 생활 선호와 가까운 순서로 결과를 확인해 보세요.</p>
     </header>
 
-    <section id="quiz-panel" class="panel">
-      <div class="panel-heading">
-        <div><p class="eyebrow">QUIZ</p><h2>나를 알아가는 시간</h2></div>
-        <span class="question-count">13 QUESTIONS</span>
+    <form id="matcher-form" class="dashboard" novalidate>
+      <section class="panel controls-panel" aria-labelledby="controls-heading">
+        <div class="panel-heading">
+          <div><p class="eyebrow">DIRECT CONTROL</p><h2 id="controls-heading">직접 조건 선택</h2></div>
+          <span class="control-count">8 CONDITIONS</span>
+        </div>
+        <p class="control-help"><strong>절대 조건</strong>은 후보를 제외하고, <strong>선호 조건</strong>은 결과 순위에만 반영됩니다.</p>
+
+        <div class="control-grid">
+          <fieldset class="control-card" data-range="exercise">
+            <legend>활동량 <small>선호</small></legend>
+            <label class="any-toggle"><input type="checkbox" data-any="exercise" checked> 상관없음</label>
+            <div class="range-pair">
+              <label>최솟값 <output id="exercise-min-output">1</output><input type="range" min="1" max="5" value="1" data-range-key="exercise" data-bound="min" disabled></label>
+              <label>최댓값 <output id="exercise-max-output">5</output><input type="range" min="1" max="5" value="5" data-range-key="exercise" data-bound="max" disabled></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="control-card" data-range="shedding">
+            <legend>털 빠짐 <small>선호</small></legend>
+            <label class="any-toggle"><input type="checkbox" data-any="shedding" checked> 상관없음</label>
+            <div class="range-pair">
+              <label>최솟값 <output id="shedding-min-output">1</output><input type="range" min="1" max="5" value="1" data-range-key="shedding" data-bound="min" disabled></label>
+              <label>최댓값 <output id="shedding-max-output">5</output><input type="range" min="1" max="5" value="5" data-range-key="shedding" data-bound="max" disabled></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="control-card" data-range="grooming">
+            <legend>미용·관리 부담 <small>선호</small></legend>
+            <label class="any-toggle"><input type="checkbox" data-any="grooming" checked> 상관없음</label>
+            <div class="range-pair">
+              <label>최솟값 <output id="grooming-min-output">1</output><input type="range" min="1" max="5" value="1" data-range-key="grooming" data-bound="min" disabled></label>
+              <label>최댓값 <output id="grooming-max-output">5</output><input type="range" min="1" max="5" value="5" data-range-key="grooming" data-bound="max" disabled></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="control-card" data-range="vocal">
+            <legend>짖음 <small>절대</small></legend>
+            <label class="any-toggle"><input type="checkbox" data-any="vocal" checked> 상관없음</label>
+            <div class="range-pair">
+              <label>최솟값 <output id="vocal-min-output">1</output><input type="range" min="1" max="5" value="1" data-range-key="vocal" data-bound="min" disabled></label>
+              <label>최댓값 <output id="vocal-max-output">5</output><input type="range" min="1" max="5" value="5" data-range-key="vocal" data-bound="max" disabled></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="control-card" data-range="size">
+            <legend>크기 <small>절대</small></legend>
+            <label class="any-toggle"><input type="checkbox" data-any="size" checked> 상관없음</label>
+            <div class="range-pair">
+              <label>최솟값 <output id="size-min-output">1</output><input type="range" min="1" max="5" value="1" data-range-key="size" data-bound="min" disabled></label>
+              <label>최댓값 <output id="size-max-output">5</output><input type="range" min="1" max="5" value="5" data-range-key="size" data-bound="max" disabled></label>
+            </div>
+          </fieldset>
+
+          <div class="control-card category-controls">
+            <label for="housing">주거 형태</label>
+            <select id="housing" data-category="housing">
+              <option value="">상관없음</option><option value="1">원룸·다세대 공동주택</option><option value="2">아파트</option><option value="3">마당 있는 단독주택</option>
+            </select>
+            <label for="experience">반려견 양육 경험</label>
+            <select id="experience" data-category="experience">
+              <option value="">상관없음</option><option value="novice">처음</option><option value="experienced">유경험자</option>
+            </select>
+            <label for="children">어린아이 동거 여부</label>
+            <select id="children" data-category="children">
+              <option value="">상관없음</option><option value="true">예</option><option value="false">아니오</option>
+            </select>
+          </div>
+
+          <div class="control-card priority-control">
+            <label for="priority">가장 중요한 1순위 조건</label>
+            <select id="priority" data-priority>
+              <option value="">없음</option>
+            </select>
+            <p>현재 활성화한 선호 조건만 선택할 수 있어요.</p>
+          </div>
+        </div>
+      </section>
+
+      <details id="guide" class="panel guide-panel">
+        <summary><span><strong>설문으로 조건 찾기</strong><small>직접 고르기 어렵다면 펼쳐보세요</small></span></summary>
+        <p class="guide-copy">각 속성의 두 문항을 모두 답하면 위 직접 제어 값에 자동으로 반영됩니다.</p>
+        <div id="survey-questions" class="survey-grid"></div>
+      </details>
+
+      <div class="action-bar">
+        <p id="candidate-count" role="status" aria-live="polite" aria-atomic="true">절대 조건 통과 후보: 40마리</p>
+        <p id="validation" class="validation" role="alert" hidden></p>
+        <div class="action-buttons">
+          <button id="reset" class="secondary-button" type="reset">초기화</button>
+          <button class="primary-button" type="submit">조건으로 찾기</button>
+        </div>
       </div>
-      <form id="quiz-form">
-        <div id="quiz"></div>
-        <p id="validation" class="validation" hidden></p>
-        <button class="primary-button" type="submit">내 견종 추천받기 <span>→</span></button>
-      </form>
+    </form>
+
+    <section id="results-panel" class="panel results-panel" hidden aria-labelledby="results-heading">
+      <div class="panel-heading"><div><p class="eyebrow">YOUR MATCH</p><h2 id="results-heading" tabindex="-1">조건과 가까운 친구들</h2></div></div>
+      <p class="result-intro">절대 조건을 통과한 후보를 생활 선호와 가까운 순서로 정렬한 참고 결과예요. 실제 개체의 성격과 건강은 다를 수 있습니다.</p>
+      <p id="empty-state" class="empty-state" hidden></p>
+      <ol id="results-list" class="results-list"></ol>
     </section>
 
-    <section id="results-panel" class="panel results-panel" hidden>
-      <div class="panel-heading"><div><p class="eyebrow">YOUR MATCH</p><h2>당신과 가까운 친구들</h2></div></div>
-      <p class="result-intro">설문 답변과 품종별 생활 특성 태그를 비교한 결과예요.<br>추천은 참고용이며 실제 개체의 성격과 건강은 다를 수 있어요.</p>
-      <div id="results-list"></div>
-      <button id="restart" class="secondary-button" type="button">다시 테스트하기</button>
-    </section>
-
-    <footer>멍BTI는 입양 적합성이나 품종의 우열을 판정하지 않습니다. 책임 있는 반려생활을 위해 가족과 충분히 상의해 주세요.</footer>
+    <footer>멍BTI는 입양 적합성이나 품종의 우열을 판정하지 않습니다. 실제 개체의 성격과 건강 상태를 직접 확인하고 가족과 충분히 상의해 주세요.</footer>
   </main>
   <script type="module" src="/app.js"></script>
 </body>

@@ -1,5 +1,7 @@
 # GitHub와 Vercel 배포
 
+멍BTI는 서버나 원격 추천 API 없이 브라우저에서 동작하는 결정적 조건 매칭 앱입니다.
+
 ## 1. GitHub에 커밋
 
 ```bash

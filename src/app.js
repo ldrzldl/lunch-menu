@@ -1,171 +1,195 @@
 import { BREEDS } from './data/breeds.js';
+import {
+  RANGE_META,
+  RANGE_KEYS,
+  SOFT_RANGE_KEYS,
+  SURVEY_QUESTIONS,
+  countCandidates,
+  createEmptyFilters,
+  hasActiveCondition,
+  mapSurveyAnswers,
+  normalizeRange,
+  rankBreeds
+} from './matching.js';
 
-const QUESTIONS = [
-  { id: 'rhythm', title: '평소 생활 리듬은?', options: ['아침형, 새벽부터 활동적으로 움직여요', '저녁형, 늦게 자고 늦게 일어나요', '규칙적이고 일정한 편이에요', '그날그날 다르고 불규칙해요'] },
-  { id: 'home', title: '주거 형태는?', options: ['마당이 있는 단독주택', '아파트/빌라 (엘리베이터 있음)', '원룸/오피스텔 (좁은 실내)', '반려동물 동반 가능한 공동주택'] },
-  { id: 'time', title: '하루 중 강아지에게 낼 수 있는 시간은?', options: ['30분 이하 (매우 바쁜 편)', '30분~1시간', '1~2시간', '2시간 이상 (거의 종일 함께 있어요)'] },
-  { id: 'personality', title: '성향(간단 MBTI)은?', options: ['E (외향적, 활동적이고 사람·동물과 잘 어울림)', 'I (내향적, 조용하고 차분한 시간을 선호)', 'S/J 성향 강함 (규칙적이고 체계적인 걸 좋아함)', 'N/P 성향 강함 (즉흥적이고 자유로운 걸 좋아함)'] },
-  { id: 'size', title: '선호하는 강아지 크기는?', options: ['소형견 (5kg 이하)', '중형견 (5~15kg)', '대형견 (15kg 이상)', '상관없음, 성격이 더 중요해요'] },
-  { id: 'grooming', title: '털 알레르기나 털 관리에 대한 부담은?', options: ['알레르기가 있어 털 빠짐이 적은 강아지가 필요해요', '매일 빗질/미용 관리 가능해요', '가끔만 관리할 수 있어요', '상관없어요'] },
-  { id: 'noise', title: '짖음(소음)에 대한 주변 환경은?', options: ['층간소음에 예민해서 조용한 강아지가 필요해요', '어느 정도 짖어도 괜찮아요', '마당이 있어 소음 걱정이 적어요'] },
-  { id: 'experience', title: '반려 경험이 있나요?', options: ['처음 키워봐요 (초보자)', '몇 번 키워본 경험이 있어요', '전문적으로 훈련까지 해본 경험이 있어요'] },
-  { id: 'family', title: '함께 사는 가족 구성은?', options: ['1인 가구', '어린 자녀가 있는 가정', '다른 반려동물(개/고양이)이 있어요', '노년층 가족과 함께 살아요'] },
-  { id: 'temperament', title: '원하는 강아지 성격은?', options: ['애교 많고 사람을 잘 따르는 성격', '독립적이고 혼자서도 잘 지내는 성격', '활발하고 에너지 넘치는 성격', '차분하고 온순한 성격'] },
-  { id: 'exercise', title: '운동/산책 스타일은?', options: ['매일 격렬한 운동(뛰기, 등산 등)을 함께하고 싶어요', '가벼운 산책 정도면 충분해요', '실내 놀이 위주로 활동하고 싶어요'] },
-  { id: 'budget', title: '예산(사료, 미용, 병원비 등 월 지출 여유)은?', options: ['넉넉한 편이에요', '보통이에요', '최소한으로 관리하고 싶어요'] },
-  { id: 'training', title: '훈련/교육에 투자할 의지는?', options: ['전문 훈련사와 함께 체계적으로 훈련할 계획이에요', '기본적인 배변·훈련 정도만 직접 할 수 있어요', '시간이 많지 않아 최소한만 가능해요'] }
+const $ = (selector) => document.querySelector(selector);
+const form = $('#matcher-form');
+const state = { filters: createEmptyFilters(), answers: {}, results: [] };
+const surveyGroups = [
+  ['activity', '활동량'], ['shedding', '털 빠짐'], ['grooming', '미용·관리 부담'],
+  ['housing', '주거 및 짖음'], ['size', '크기'], ['experience', '양육 경험'], ['children', '어린아이 동거']
 ];
 
-const state = { answers: {}, results: [] };
-const $ = (selector) => document.querySelector(selector);
-
-function renderQuiz() {
-  $('#quiz').innerHTML = QUESTIONS.map((question, index) => `
-    <fieldset class="question">
-      <legend><span>${String(index + 1).padStart(2, '0')}</span>${question.title}</legend>
-      <div class="options">
-        ${question.options.map((option, optionIndex) => `
-          <label class="option">
-            <input type="radio" name="${question.id}" value="${optionIndex}">
-            <span>${option}</span>
-          </label>`).join('')}
+function renderSurvey() {
+  $('#survey-questions').innerHTML = surveyGroups.map(([group, label]) => `
+    <details class="survey-group">
+      <summary>${label}</summary>
+      <div class="survey-group-questions">
+        ${SURVEY_QUESTIONS.filter((question) => question.group === group).map((question) => `
+          <fieldset class="survey-question">
+            <legend>${question.prompt}</legend>
+            <div class="survey-options">
+              ${question.options.map(([option, value]) => `<label><input type="radio" name="survey-${question.id}" value="${value}" data-survey="${question.id}"> ${option}</label>`).join('')}
+            </div>
+          </fieldset>`).join('')}
       </div>
-    </fieldset>`).join('');
+    </details>`).join('');
 }
 
-const clamp = (value, min = 1, max = 5) => Math.max(min, Math.min(max, value));
-const distance = (actual, target) => Math.abs(actual - target);
-
-function targetProfile(answers) {
-  const time = [1, 2, 3, 5][answers.time];
-  const exercise = answers.exercise === 0 ? 5 : answers.exercise === 1 ? 2 : 2;
-  let social = answers.temperament === 0 ? 5 : answers.temperament === 1 ? 2 : answers.temperament === 3 ? 3 : 4;
-  let alone = answers.temperament === 1 ? 5 : 2;
-  if (answers.family === 1) social = 5;
-  if (answers.family === 2) social = 4;
-  return {
-    exercise: clamp(Math.round((time + exercise) / 2)),
-    alone,
-    grooming: [1, 4, 2, 3][answers.grooming],
-    vocal: answers.noise === 0 ? 1 : answers.noise === 1 ? 3 : 5,
-    train: Math.round(([2, 3, 5][answers.experience] + [5, 3, 1][answers.training]) / 2),
-    social,
-    cost: [5, 3, 1][answers.budget],
-    time,
-    size: answers.size,
-    family: answers.family,
-    experience: answers.experience,
-    rhythm: answers.rhythm,
-    home: answers.home,
-    personality: answers.personality,
-    temperament: answers.temperament,
-    exerciseChoice: answers.exercise,
-    training: answers.training
-  };
+function syncRange(key) {
+  const any = form.querySelector(`[data-any="${key}"]`);
+  const inputs = [...form.querySelectorAll(`[data-range-key="${key}"]`)];
+  const range = state.filters.ranges[key];
+  any.checked = range === null;
+  for (const input of inputs) {
+    input.disabled = range === null;
+    if (range) input.value = range[input.dataset.bound];
+    $(`#${key}-${input.dataset.bound}-output`).value = input.value;
+  }
 }
 
-function sizeScore(size, preference, home) {
-  if (preference === 3) return 100;
-  const small = size === 'S' || size === 'S/M';
-  const medium = size === 'M' || size === 'M/L' || size === 'S/M';
-  const large = size === 'L' || size === 'M/L' || size === 'M/L';
-  if (preference === 0) return small ? 100 : 25;
-  if (preference === 1) return medium ? 100 : 30;
-  return large ? 100 : 25;
+function clearResults() {
+  state.results = [];
+  $('#results-list').replaceChildren();
+  $('#results-panel').hidden = true;
+  $('#empty-state').hidden = true;
 }
 
-function scoreBreed(breed, profile) {
-  const metricScore = (actual, target) => 100 - distance(actual, target) * 22;
-  let score = sizeScore(breed.size, profile.size, profile.home);
-  score = score * 0.25
-    + metricScore(breed.exercise, profile.exercise) * 0.18
-    + metricScore(breed.alone, profile.alone) * 0.08
-    + metricScore(breed.grooming, profile.grooming) * 0.10
-    + metricScore(breed.vocal, profile.vocal) * 0.10
-    + metricScore(breed.train, profile.train) * 0.10
-    + metricScore(breed.social, profile.social) * 0.10
-    + metricScore(breed.cost, profile.cost) * 0.09;
-
-  if (profile.home === 2 && (breed.size === 'L' || breed.size === 'M/L')) score -= 10;
-  if (profile.experience === 0 && breed.train <= 2) score -= 8;
-  if (profile.exerciseChoice === 0 && breed.exercise >= 4) score += 7;
-  if (profile.temperament === 1 && breed.alone >= 4) score += 8;
-  if (profile.personality === 2 && breed.train >= 4) score += 4;
-  return score;
+function syncPriorityOptions() {
+  const select = $('#priority');
+  const active = SOFT_RANGE_KEYS.filter((key) => state.filters.ranges[key]);
+  if (!active.includes(state.filters.priority)) state.filters.priority = null;
+  select.innerHTML = `<option value="">없음</option>${active.map((key) => `<option value="${key}">${RANGE_META[key].label}</option>`).join('')}`;
+  select.value = state.filters.priority || '';
 }
 
-function reasons(breed, profile) {
-  const candidates = [];
-  if (profile.size === 3 || (profile.size === 0 && ['S', 'S/M'].includes(breed.size)) || (profile.size === 1 && ['M', 'S/M'].includes(breed.size)) || (profile.size === 2 && ['L', 'M/L'].includes(breed.size))) candidates.push('선호한 크기 조건과 가까워요');
-  if (distance(breed.exercise, profile.exercise) <= 1) candidates.push('희망한 운동량과 잘 맞아요');
-  if (distance(breed.grooming, profile.grooming) <= 1) candidates.push('털 관리 부담에 대한 조건과 가까워요');
-  if (distance(breed.train, profile.train) <= 1) candidates.push('현재 훈련 경험과 잘 맞을 가능성이 있어요');
-  if (distance(breed.social, profile.social) <= 1) candidates.push('원하는 교감·사회성 성향과 가까워요');
-  if (distance(breed.vocal, profile.vocal) <= 1) candidates.push('주거 환경의 소음 조건과 비교적 잘 맞아요');
-  return candidates.slice(0, 2);
+function updateCandidateCount() {
+  $('#candidate-count').textContent = `절대 조건 통과 후보: ${countCandidates(BREEDS, state.filters)}마리`;
 }
 
-function cautions(breed, profile) {
-  const notes = [];
-  if (breed.exercise >= 4 && profile.exercise <= 2) notes.push('매일 충분한 산책과 놀이가 필요해요');
-  if (breed.grooming >= 4 && profile.grooming <= 2) notes.push('정기적인 빗질·미용 부담을 확인하세요');
-  if (breed.vocal >= 4 && profile.vocal <= 2) notes.push('공동주택에서는 짖음 교육이 중요해요');
-  if ((breed.size === 'L' || breed.size === 'M/L') && profile.home === 2) notes.push('좁은 실내에서 생활공간과 운동 계획을 확인하세요');
-  if (breed.alone <= 1 && profile.alone >= 4) notes.push('혼자 있는 시간이 길면 어려울 수 있어요');
-  if (breed.cost >= 4 && profile.cost <= 2) notes.push('사료·미용·병원비 여유를 먼저 확인하세요');
-  return notes.length ? notes.slice(0, 2) : ['개체별 성격과 건강 상태를 직접 확인하세요'];
+function filtersChanged() {
+  syncPriorityOptions();
+  $('#validation').hidden = true;
+  clearResults();
+  updateCandidateCount();
 }
 
-function recommend(answers) {
-  const profile = targetProfile(answers);
-  return BREEDS.map((breed) => ({ breed, score: scoreBreed(breed, profile), reasons: reasons(breed, profile), cautions: cautions(breed, profile) }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
+function setCategory(select) {
+  const { category } = select.dataset;
+  if (!select.value) state.filters[category] = null;
+  else if (category === 'housing') state.filters.housing = Number(select.value);
+  else if (category === 'children') state.filters.children = select.value === 'true';
+  else state.filters.experience = select.value;
+}
+
+function applySurveyPatch(patch) {
+  if (patch.ranges) {
+    for (const [key, range] of Object.entries(patch.ranges)) {
+      state.filters.ranges[key] = range;
+      syncRange(key);
+    }
+  }
+  for (const key of ['housing', 'experience', 'children']) {
+    if (!(key in patch)) continue;
+    state.filters[key] = patch[key];
+    form.querySelector(`[data-category="${key}"]`).value = String(patch[key]);
+  }
+}
+
+function handleDirectInput(target) {
+  if (target.matches('[data-survey]')) {
+    state.answers[target.dataset.survey] = Number(target.value);
+    const patch = mapSurveyAnswers(state.answers, target.dataset.survey);
+    if (Object.keys(patch).length) {
+      applySurveyPatch(patch);
+      filtersChanged();
+    }
+    return;
+  }
+
+  if (target.matches('[data-any]')) {
+    const key = target.dataset.any;
+    const minInput = form.querySelector(`[data-range-key="${key}"][data-bound="min"]`);
+    const maxInput = form.querySelector(`[data-range-key="${key}"][data-bound="max"]`);
+    state.filters.ranges[key] = target.checked ? null : normalizeRange(key, minInput.value, maxInput.value);
+    syncRange(key);
+    return filtersChanged();
+  }
+
+  if (target.matches('[data-range-key]')) {
+    const key = target.dataset.rangeKey;
+    const minInput = form.querySelector(`[data-range-key="${key}"][data-bound="min"]`);
+    const maxInput = form.querySelector(`[data-range-key="${key}"][data-bound="max"]`);
+    state.filters.ranges[key] = normalizeRange(key, minInput.value, maxInput.value, target.dataset.bound);
+    syncRange(key);
+    return filtersChanged();
+  }
+
+  if (target.matches('[data-category]')) {
+    setCategory(target);
+    filtersChanged();
+    return;
+  }
+
+  if (target.matches('[data-priority]')) {
+    state.filters.priority = target.value || null;
+    filtersChanged();
+  }
 }
 
 function renderResults(results) {
-  const medals = ['🥇', '🥈', '🥉'];
   $('#results-list').innerHTML = results.map((result, index) => `
-    <article class="result-card rank-${index + 1}">
-      <div class="medal">${medals[index]}</div>
-      <div class="result-main">
-        <p class="rank">${['금메달', '은메달', '동메달'][index]} · 적합도 ${Math.round(result.score)}점</p>
-        <h3>${result.breed.name}</h3>
-        <p>${result.breed.description}</p>
-        <div class="result-columns">
-          <div><strong>추천 이유</strong><ul>${result.reasons.map((item) => `<li>${item}</li>`).join('')}</ul></div>
-          <div><strong>확인할 점</strong><ul>${result.cautions.map((item) => `<li>${item}</li>`).join('')}</ul></div>
-        </div>
-        <div class="tags">${result.breed.tags.map((tag) => `<span>${tag}</span>`).join('')}</div>
+    <li><article class="result-card">
+      <p class="rank">${index + 1}위 · ${result.matchLabel}</p>
+      <h3>${result.breed.name}</h3>
+      <p>${result.breed.description}</p>
+      <div class="result-columns">
+        <div><strong>추천 이유</strong><p>${result.reason}</p></div>
+        <div><strong>확인할 점</strong><p>${result.caution}</p></div>
       </div>
-    </article>`).join('');
-  $('#quiz-panel').hidden = true;
-  $('#results-panel').hidden = false;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+      <p class="individual-notice">품종 특성은 참고용이며 실제 개체의 성격과 건강 상태는 다를 수 있어요.</p>
+      <div class="tags">${result.breed.tags.map((tag) => `<span>${tag}</span>`).join('')}</div>
+    </article></li>`).join('');
 }
 
-function showValidation() {
-  $('#validation').textContent = '모든 질문에 답해 주세요.';
-  $('#validation').hidden = false;
-  const firstMissing = QUESTIONS.find((question) => state.answers[question.id] === undefined);
-  document.querySelector(`input[name="${firstMissing.id}"]`)?.focus();
-}
+form.addEventListener('input', (event) => handleDirectInput(event.target));
 
-renderQuiz();
-$('#quiz').addEventListener('change', (event) => {
-  if (event.target.matches('input[type="radio"]')) state.answers[event.target.name] = Number(event.target.value);
-  $('#validation').hidden = true;
-});
-$('#quiz-form').addEventListener('submit', (event) => {
+form.addEventListener('submit', (event) => {
   event.preventDefault();
-  if (Object.keys(state.answers).length !== QUESTIONS.length) return showValidation();
-  state.results = recommend(state.answers);
-  renderResults(state.results);
+  if (!hasActiveCondition(state.filters)) {
+    $('#validation').textContent = '하나 이상의 조건을 선택해 주세요.';
+    $('#validation').hidden = false;
+    form.querySelector('[data-any="exercise"]').focus();
+    return;
+  }
+
+  state.results = rankBreeds(BREEDS, state.filters);
+  $('#results-panel').hidden = false;
+  if (!state.results.length) {
+    $('#empty-state').textContent = '현재 조건을 모두 충족하는 견종이 없습니다. 범위나 절대 조건을 완화해 보세요.';
+    $('#empty-state').hidden = false;
+    $('#results-list').replaceChildren();
+  } else {
+    $('#empty-state').hidden = true;
+    renderResults(state.results);
+  }
+  $('#results-heading').focus();
 });
-$('#restart').addEventListener('click', () => {
-  state.answers = {};
-  $('#quiz-form').reset();
-  $('#results-panel').hidden = true;
-  $('#quiz-panel').hidden = false;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+form.addEventListener('reset', () => {
+  requestAnimationFrame(() => {
+    state.filters = createEmptyFilters();
+    state.answers = {};
+    $('#guide').open = false;
+    for (const key of RANGE_KEYS) syncRange(key);
+    syncPriorityOptions();
+    clearResults();
+    $('#validation').hidden = true;
+    updateCandidateCount();
+  });
 });
+
+renderSurvey();
+for (const key of RANGE_KEYS) syncRange(key);
+syncPriorityOptions();
+updateCandidateCount();
