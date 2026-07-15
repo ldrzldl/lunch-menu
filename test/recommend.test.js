@@ -24,10 +24,15 @@ test('final review validates current-method candidates and falls back without a 
 test('ordinary subjective input reaches the LLM', async () => {
   const originalFetch = globalThis.fetch;
   const originalKey = process.env.OPENAI_API_KEY;
+  let calls = 0;
   process.env.OPENAI_API_KEY = 'test-key';
-  globalThis.fetch = async () => new Response(JSON.stringify({ choices: [{ message: {
+  globalThis.fetch = async (url) => {
+    calls += 1;
+    assert.match(url, /\/chat\/completions$/);
+    return new Response(JSON.stringify({ choices: [{ message: {
     content: JSON.stringify({ breedName: '말티즈', summary: '일반 문장 검토 완료', cautions: [] })
-  } }] }), { status: 200 });
+    } }] }), { status: 200 });
+  };
   const result = await handleRecommend({
     candidates: [{ name: '말티즈' }, { name: '비숑 프리제' }],
     context: '저는 신중하게 선택하고 싶어요.'
@@ -36,6 +41,8 @@ test('ordinary subjective input reaches the LLM', async () => {
     assert.equal(result.status, 200);
     assert.equal(result.body.recommendation.summary, '일반 문장 검토 완료');
     assert.equal(result.body.fallback, false);
+    assert.equal(result.body.searched, false);
+    assert.equal(calls, 1);
   } finally {
     globalThis.fetch = originalFetch;
     if (originalKey === undefined) delete process.env.OPENAI_API_KEY;
