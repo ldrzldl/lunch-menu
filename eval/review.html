@@ -123,7 +123,7 @@
     function render() {
       const testCase = state.cases[state.index];
       const row = state.results.get(testCase.id);
-      const result = row?.attempts?.[0]?.result?.recommendation;
+      const result = row?.result?.recommendation;
       const review = state.review.cases[state.index];
       $('#case-number').textContent = `CASE ${String(state.index + 1).padStart(2,'0')} · ${testCase.id}`;
       $('#auto-check').textContent = row?.deterministicPass ? '자동 필수 검사 통과' : '자동 필수 검사 실패';

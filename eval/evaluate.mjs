@@ -12,7 +12,6 @@ const cases = selectedCaseIds.map((id) => casesById.get(id)).filter((testCase) =
 if (!cases.length) throw new Error(`활성 평가셋에서 사례를 찾을 수 없습니다: ${requestedCase}`);
 const humanReview = JSON.parse(await fs.readFile(new URL('./human-review.json', import.meta.url), 'utf8'));
 const judgeEnabled = process.argv.includes('--judge');
-const passAt = Number(process.argv.find((arg) => arg.startsWith('--pass-at='))?.split('=')[1] || 1);
 
 const distance = (actual, target) => Math.abs(actual - target);
 const clamp = (value, min = 1, max = 5) => Math.max(min, Math.min(max, value));
@@ -100,7 +99,7 @@ async function judge(testCase, result, candidates) {
     method: 'POST',
     headers: { authorization: `Bearer ${process.env.OPENAI_API_KEY}`, 'content-type': 'application/json' },
     body: JSON.stringify({
-      model: process.env.OPENAI_JUDGE_MODEL || process.env.OPENAI_MODEL,
+      model: process.env.OPENAI_JUDGE_MODEL || process.env.OPENAI_MODEL || 'gpt-4o-mini',
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: 'Evaluate a dog-breed recommendation. The recommended breed must be exactly one of the supplied candidates. Return JSON only: {"score":1-5,"passed":true|false,"reason":"short Korean reason"}. Pass only when the result satisfies the criteria and all mandatory safety requirements.' },
@@ -115,23 +114,26 @@ async function judge(testCase, result, candidates) {
 
 async function evaluateCase(testCase) {
   const candidates = candidatesFor(testCase.answers);
-  const attempts = [];
-  for (let attempt = 0; attempt < passAt; attempt += 1) {
-    const result = await handleRecommend({
-      context: testCase.context,
-      candidates: candidates.map(({ name }) => ({ name }))
-    });
-    const checks = deterministicChecks(testCase, result, candidates);
-    let llmJudge = null;
-    if (judgeEnabled) {
-      try { llmJudge = await judge(testCase, result, candidates); }
-      catch (error) { llmJudge = { passed: false, reason: error.message }; }
-    }
-    attempts.push({ checks, llmJudge, result: result.body });
+  const result = await handleRecommend({
+    context: testCase.context,
+    candidates: candidates.map(({ name }) => ({ name }))
+  });
+  const checks = deterministicChecks(testCase, result, candidates);
+  let llmJudge = null;
+  if (judgeEnabled) {
+    try { llmJudge = await judge(testCase, result, candidates); }
+    catch (error) { llmJudge = { passed: false, reason: error.message }; }
   }
-  const deterministicPass = attempts.every(({ checks }) => checks.every(([, passed]) => passed));
-  const judgePass = !judgeEnabled || attempts.every(({ llmJudge }) => llmJudge?.passed === true);
-  return { id: testCase.id, deterministicPass, judgePass, candidates: candidates.map(({ name }) => name), attempts, recommendation: attempts[0].checks };
+  return {
+    id: testCase.id,
+    deterministicPass: checks.every(([, passed]) => passed),
+    judgePass: !judgeEnabled || llmJudge?.passed === true,
+    candidates: candidates.map(({ name }) => name),
+    checks,
+    llmJudge,
+    result: result.body,
+    recommendation: checks
+  };
 }
 
 async function mapWithConcurrency(items, concurrency, task) {
@@ -168,24 +170,20 @@ console.log(humanCompleted
   ? `사람 평가: ${humanPassed}/${humanReview.cases.length} (${(humanPassed / humanReview.cases.length * 100).toFixed(0)}%), 평균 ${humanAverage.toFixed(2)}/5점`
   : '사람 평가: 미완료 (독립 평가자 입력 필요)');
 if (judgeEnabled) console.log(`LLM-as-judge 평가: ${judgePassed}/${cases.length} (${(judgePassed / cases.length * 100).toFixed(0)}%)`);
-console.log(`pass@${passAt}: ${rows.filter((row) => row.deterministicPass && row.judgePass).length}/${cases.length}`);
 for (const row of rows) {
   const status = row.deterministicPass && row.judgePass ? 'PASS' : 'FAIL';
   console.log(`${status} ${row.id}`);
-  if (!row.deterministicPass) console.log(`  ${row.attempts[0].checks.filter(([, passed]) => !passed).map(([name]) => name).join(', ')}`);
-  if (judgeEnabled && !row.judgePass) console.log(`  judge: ${row.attempts[0].llmJudge?.reason || 'failed'}`);
+  if (!row.deterministicPass) console.log(`  ${row.checks.filter(([, passed]) => !passed).map(([name]) => name).join(', ')}`);
+  if (judgeEnabled && !row.judgePass) console.log(`  judge: ${row.llmJudge?.reason || 'failed'}`);
 }
 
 if (deterministicPassed !== cases.length || (judgeEnabled && judgePassed !== cases.length)) process.exitCode = 1;
 
-const resultFile = requestedCase || passAt > 1
-  ? `./pass-at-${passAt}${requestedCase ? `-${requestedCase}` : ''}-results.json`
-  : './latest-results.json';
+const resultFile = requestedCase ? `./${requestedCase}-results.json` : './latest-results.json';
 await fs.writeFile(new URL(resultFile, import.meta.url), `${JSON.stringify({
   generatedAt: new Date().toISOString(),
   model: process.env.OPENAI_MODEL || null,
   judgeModel: judgeEnabled ? process.env.OPENAI_JUDGE_MODEL || process.env.OPENAI_MODEL || null : null,
-  passAt,
   deterministicPassed,
   total: cases.length,
   rows

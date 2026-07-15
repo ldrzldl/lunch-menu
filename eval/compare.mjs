@@ -6,7 +6,7 @@ const human = new Map(review.cases.map((item) => [item.id, item]));
 const rows = results.rows.map((row) => {
   const item = human.get(row.id);
   const humanPass = Boolean(item?.hardRequirementsPassed && item.score >= review.passScore);
-  const judge = row.attempts?.[0]?.llmJudge;
+  const judge = row.llmJudge;
   const judgePass = judge?.passed === true;
   return { id: row.id, humanPass, humanScore: item?.score ?? null, judgePass, judgeScore: judge?.score ?? null, agreement: humanPass === judgePass, humanReason: item?.reason || '', judgeReason: judge?.reason || '' };
 });

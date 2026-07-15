@@ -30,7 +30,7 @@ test('ordinary subjective input reaches the LLM', async () => {
   } }] }), { status: 200 });
   const result = await handleRecommend({
     candidates: [{ name: '말티즈' }, { name: '비숑 프리제' }],
-    context: '오늘 점심 메뉴 추천해줘'
+    context: '우리 집은 아파트이고 조용한 강아지를 원합니다.'
   });
   try {
     assert.equal(result.status, 200);
@@ -86,6 +86,7 @@ test('final review follows the ReAct tool-call and observation loop', async () =
   const originalFetch = globalThis.fetch;
   const originalKey = process.env.OPENAI_API_KEY;
   let chatCalls = 0;
+  let searchCalls = 0;
   process.env.OPENAI_API_KEY = 'test-key';
   globalThis.fetch = async (url, options) => {
     if (url.endsWith('/chat/completions')) {
@@ -93,18 +94,33 @@ test('final review follows the ReAct tool-call and observation loop', async () =
       const request = JSON.parse(options.body);
       assert.equal(options.headers.authorization, 'Bearer test-key');
       assert.deepEqual(request.response_format, { type: 'json_object' });
+      assert.equal(request.parallel_tool_calls, false);
       assert.equal(request.reasoning_effort, undefined);
+      if (chatCalls === 1) assert.deepEqual(JSON.parse(request.messages.at(-1).content).objectiveAnswers, [{ question: '주거 형태는?', answer: '아파트' }]);
+      if (chatCalls === 2) {
+        assert.equal(request.messages.at(-2).role, 'assistant');
+        assert.equal(request.messages.at(-2).tool_calls[0].id, 'call-1');
+        assert.equal(request.messages.at(-1).role, 'tool');
+        assert.equal(request.messages.at(-1).tool_call_id, 'call-1');
+        const observation = JSON.parse(request.messages.at(-1).content);
+        assert.equal(observation.searches.length, 5);
+        assert.match(observation.searches[0].query, /말티즈/);
+        assert.deepEqual(observation.searches.map(({ breedName }) => breedName), ['말티즈', '비숑 프리제', '토이·미니어처 푸들', '치와와', '시츄']);
+      }
       return new Response(JSON.stringify(chatCalls === 1
         ? { choices: [{ message: { role: 'assistant', content: null, tool_calls: [{ id: 'call-1', type: 'function', function: { name: 'web_search', arguments: '{"query":"말티즈 털 관리"}' } }] } }] }
-        : { choices: [{ message: { role: 'assistant', content: JSON.stringify({ breedName: '말티즈', summary: '검색 후 판단', objectiveFit: ['조건'], subjectiveFit: ['상황'], cautions: ['확인'], sources: [] }) } }] }), { status: 200 });
+        : { choices: [{ message: { role: 'assistant', content: JSON.stringify({ breedName: '말티즈', summary: '검색 후 판단', reasons: ['조건과 상황'], cautions: ['확인'], sources: [] }) } }] }), { status: 200 });
     }
-    return new Response(JSON.stringify({ output_text: '말티즈 털 관리 정보: 출처 확인 필요' }), { status: 200 });
+    searchCalls += 1;
+    return new Response(JSON.stringify({ output_text: `${url} 검색 결과: 후보별 관리 정보` }), { status: 200 });
   };
   try {
-    const result = await handleRecommend({ candidates: [{ name: '말티즈' }], context: '말티즈의 털 관리와 건강이 걱정됩니다.' });
+    const result = await handleRecommend({ candidates: [{ name: '말티즈' }, { name: '비숑 프리제' }, { name: '토이·미니어처 푸들' }, { name: '치와와' }, { name: '시츄' }], context: '말티즈의 털 관리와 건강이 걱정됩니다.', objectiveAnswers: [{ question: '주거 형태는?', answer: '아파트' }] });
     assert.equal(result.body.searched, true);
     assert.equal(result.body.recommendation.summary, '검색 후 판단');
+    assert.deepEqual(result.body.recommendation.reasons, ['조건과 상황']);
     assert.equal(chatCalls, 2);
+    assert.equal(searchCalls, 5);
   } finally {
     globalThis.fetch = originalFetch;
     if (originalKey === undefined) delete process.env.OPENAI_API_KEY;

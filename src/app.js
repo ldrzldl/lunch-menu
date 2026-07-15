@@ -127,7 +127,7 @@ function renderFinal(result) {
   const recommendation = result.recommendation;
   $('#final-breed').textContent = recommendation.breedName;
   $('#final-summary').textContent = recommendation.summary;
-  for (const [id, items] of [['final-objective', recommendation.objectiveFit], ['final-subjective', recommendation.subjectiveFit], ['final-cautions', recommendation.cautions]]) {
+  for (const [id, items] of [['final-reasons', recommendation.reasons], ['final-cautions', recommendation.cautions]]) {
     const list = $(`#${id}`);
     list.replaceChildren(...(items || []).map((item) => Object.assign(document.createElement('li'), { textContent: item })));
   }
@@ -146,24 +146,28 @@ function renderFinal(result) {
 
 async function requestFinal() {
   const context = $('#user-context').value.trim();
+  const objectiveAnswers = QUESTIONS.map((question) => ({
+    question: question.title,
+    answer: question.options[state.answers[question.id]]
+  }));
   const button = $('#recommend-submit');
   button.disabled = true;
-  $('#agent-status').textContent = '다섯 후보와 답변을 검토하고 있습니다…';
+  $('#agent-status').textContent = '설문 답변을 비교하고 있습니다…';
   try {
     const response = await fetch('/api/recommend', {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ context, candidates: state.results.map(({ breed }) => ({ name: breed.name })) })
+      body: JSON.stringify({ context, objectiveAnswers, candidates: state.results.map(({ breed }) => ({ name: breed.name })) })
     });
     if (!response.ok) throw new Error('request failed');
     state.final = await response.json();
     renderFinal(state.final);
     $('#agent-status').textContent = state.final.fallback
-      ? state.final.fallbackReason || 'LLM을 사용할 수 없어 객관식 점수 1위 후보를 추천했습니다.'
-      : state.final.searched ? '웹 검색 결과를 반영했습니다.' : '추가 검색 없이 후보를 검토했습니다.';
+      ? state.final.fallbackReason || 'LLM을 사용할 수 없어 현재 결과의 1순위 후보를 추천했습니다.'
+      : state.final.searched ? '웹 검색 결과를 반영했습니다.' : '추천을 정리했습니다.';
     $('#quiz-panel').hidden = true;
     $('#final-heading').focus();
   } catch {
-    $('#agent-status').textContent = '최종 추천을 불러오지 못했습니다. 다섯 후보를 참고해 주세요.';
+    $('#agent-status').textContent = '최종 추천을 불러오지 못했습니다. 현재 결과를 참고해 주세요.';
   } finally {
     button.disabled = false;
   }
