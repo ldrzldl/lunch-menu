@@ -6,7 +6,8 @@ export default async function handler(request, response) {
     const body = typeof request.body === 'string' ? JSON.parse(request.body || '{}') : request.body || {};
     const result = await handleRecommend(body);
     return response.status(result.status).json(result.body);
-  } catch {
+  } catch (error) {
+    if (error instanceof SyntaxError) return response.status(400).json({ error: '요청 본문이 올바르지 않습니다.' });
     return response.status(500).json({ error: '추천 요청을 처리하지 못했습니다.' });
   }
 }

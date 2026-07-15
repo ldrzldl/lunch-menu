@@ -21,14 +21,44 @@ test('final review validates current-method candidates and falls back without a 
   }
 });
 
-test('irrelevant subjective input falls back to the highest-scored candidate', async () => {
+test('ordinary subjective input reaches the LLM', async () => {
+  const originalFetch = globalThis.fetch;
+  const originalKey = process.env.OPENAI_API_KEY;
+  process.env.OPENAI_API_KEY = 'test-key';
+  globalThis.fetch = async () => new Response(JSON.stringify({ choices: [{ message: {
+    content: JSON.stringify({ breedName: '말티즈', summary: '일반 문장 검토 완료', cautions: [] })
+  } }] }), { status: 200 });
   const result = await handleRecommend({
     candidates: [{ name: '말티즈' }, { name: '비숑 프리제' }],
     context: '오늘 점심 메뉴 추천해줘'
   });
-  assert.equal(result.status, 200);
-  assert.equal(result.body.recommendation.breedName, '말티즈');
-  assert.equal(result.body.fallback, true);
+  try {
+    assert.equal(result.status, 200);
+    assert.equal(result.body.recommendation.summary, '일반 문장 검토 완료');
+    assert.equal(result.body.fallback, false);
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalKey === undefined) delete process.env.OPENAI_API_KEY;
+    else process.env.OPENAI_API_KEY = originalKey;
+  }
+});
+
+test('empty subjective input still uses the LLM when the key is available', async () => {
+  const originalFetch = globalThis.fetch;
+  const originalKey = process.env.OPENAI_API_KEY;
+  process.env.OPENAI_API_KEY = 'test-key';
+  globalThis.fetch = async () => new Response(JSON.stringify({ choices: [{ message: {
+    content: JSON.stringify({ breedName: '말티즈', summary: 'LLM 검토 완료', cautions: [] })
+  } }] }), { status: 200 });
+  try {
+    const result = await handleRecommend({ candidates: [{ name: '말티즈' }], context: '' });
+    assert.equal(result.body.fallback, false);
+    assert.equal(result.body.recommendation.summary, 'LLM 검토 완료');
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalKey === undefined) delete process.env.OPENAI_API_KEY;
+    else process.env.OPENAI_API_KEY = originalKey;
+  }
 });
 
 test('prompt injection falls back without calling the model', async () => {
@@ -61,7 +91,9 @@ test('final review follows the ReAct tool-call and observation loop', async () =
     if (url.endsWith('/chat/completions')) {
       chatCalls += 1;
       const request = JSON.parse(options.body);
-      assert.equal(request.reasoning_effort, 'none');
+      assert.equal(options.headers.authorization, 'Bearer test-key');
+      assert.deepEqual(request.response_format, { type: 'json_object' });
+      assert.equal(request.reasoning_effort, undefined);
       return new Response(JSON.stringify(chatCalls === 1
         ? { choices: [{ message: { role: 'assistant', content: null, tool_calls: [{ id: 'call-1', type: 'function', function: { name: 'web_search', arguments: '{"query":"말티즈 털 관리"}' } }] } }] }
         : { choices: [{ message: { role: 'assistant', content: JSON.stringify({ breedName: '말티즈', summary: '검색 후 판단', objectiveFit: ['조건'], subjectiveFit: ['상황'], cautions: ['확인'], sources: [] }) } }] }), { status: 200 });

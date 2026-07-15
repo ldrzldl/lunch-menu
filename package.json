@@ -10,7 +10,7 @@
     "test": "node --test test/recommend.test.js",
     "eval": "node --env-file-if-exists=.env.local eval/evaluate.mjs",
     "eval:compare": "node eval/compare.mjs",
-    "start": "node dev-server.cjs",
+    "start": "node --env-file-if-exists=.env.local dev-server.cjs",
     "vercel:login": "npx vercel login",
     "vercel:link": "npx vercel link",
     "vercel:preview": "npx vercel",

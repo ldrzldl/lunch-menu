@@ -64,11 +64,11 @@ function targetProfile(answers) {
   };
 }
 
-function sizeScore(size, preference, home) {
+function sizeScore(size, preference) {
   if (preference === 3) return 100;
   const small = size === 'S' || size === 'S/M';
   const medium = size === 'M' || size === 'M/L' || size === 'S/M';
-  const large = size === 'L' || size === 'M/L' || size === 'M/L';
+  const large = size === 'L' || size === 'M/L';
   if (preference === 0) return small ? 100 : 25;
   if (preference === 1) return medium ? 100 : 30;
   return large ? 100 : 25;
@@ -76,7 +76,7 @@ function sizeScore(size, preference, home) {
 
 function scoreBreed(breed, profile) {
   const metricScore = (actual, target) => 100 - distance(actual, target) * 22;
-  let score = sizeScore(breed.size, profile.size, profile.home);
+  let score = sizeScore(breed.size, profile.size);
   score = score * 0.25
     + metricScore(breed.exercise, profile.exercise) * 0.18
     + metricScore(breed.alone, profile.alone) * 0.08
@@ -158,7 +158,7 @@ async function requestFinal() {
     state.final = await response.json();
     renderFinal(state.final);
     $('#agent-status').textContent = state.final.fallback
-      ? '서술형 답변을 반영하기 어려워 객관식 점수 1위 후보를 추천했습니다.'
+      ? state.final.fallbackReason || 'LLM을 사용할 수 없어 객관식 점수 1위 후보를 추천했습니다.'
       : state.final.searched ? '웹 검색 결과를 반영했습니다.' : '추가 검색 없이 후보를 검토했습니다.';
     $('#quiz-panel').hidden = true;
     $('#final-heading').focus();
