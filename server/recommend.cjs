@@ -27,7 +27,7 @@ function fallback(breed, message = 'LLM 설정이 없어 결정적 후보를 표
   };
 }
 
-function normalize(value, candidates) {
+function normalize(value, candidates, searched) {
   const breed = candidates.find(({ name }) => name === value?.breedName) || candidates[0];
   return {
     breedName: breed.name,
@@ -35,7 +35,7 @@ function normalize(value, candidates) {
     objectiveFit: Array.isArray(value?.objectiveFit) ? value.objectiveFit.slice(0, 4).map(text) : [],
     subjectiveFit: Array.isArray(value?.subjectiveFit) ? value.subjectiveFit.slice(0, 4).map(text) : [],
     cautions: Array.isArray(value?.cautions) ? value.cautions.slice(0, 4).map(text) : [breed.description],
-    sources: Array.isArray(value?.sources) ? value.sources.slice(0, 5).map((source) => ({
+    sources: searched && Array.isArray(value?.sources) ? value.sources.slice(0, 5).map((source) => ({
       title: text(source?.title), url: text(source?.url), snippet: text(source?.snippet)
     })).filter(({ title, url }) => title && /^https?:\/\//.test(url)) : []
   };
@@ -118,7 +118,7 @@ async function handleRecommend(payload = {}) {
   if (!process.env.OPENAI_API_KEY) return { status: 200, body: fallback(candidates[0]) };
   try {
     const result = await callOpenAI(subjective, candidates);
-    return { status: 200, body: { recommendation: normalize(result.value, candidates), searched: result.searched, fallback: false } };
+    return { status: 200, body: { recommendation: normalize(result.value, candidates, result.searched), searched: result.searched, fallback: false } };
   } catch {
     return { status: 200, body: fallback(candidates[0], 'LLM 또는 웹 검색을 사용할 수 없어 결정적 후보를 표시합니다.') };
   }
