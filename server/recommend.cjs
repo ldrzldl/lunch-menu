@@ -27,8 +27,8 @@ function fallback(breed, message = 'LLM 설정이 없어 결정적 후보를 표
   return {
     recommendation: {
       breedName: breed.name,
-      summary: `${breed.name}이(가) 현재 객관식 결과에서 가장 먼저 검토할 후보입니다.`,
-      reasons: ['현재 객관식 점수 기준 1위 후보입니다.'],
+      summary: `${breed.name}이(가) 현재 답변 결과에서 가장 먼저 검토할 후보입니다.`,
+      reasons: ['현재 답변 점수 기준 1위 후보입니다.'],
       cautions: [breed.description, message],
       sources: []
     },
@@ -173,7 +173,7 @@ async function handleRecommend(payload = {}) {
   const objectiveAnswers = Array.isArray(payload.objectiveAnswers)
     ? payload.objectiveAnswers.slice(0, 13).map((item) => ({ question: text(item?.question), answer: text(item?.answer) })).filter(({ question, answer }) => question && answer)
     : [];
-  if (context && !isUsefulContext(context)) return { status: 200, body: fallback(candidates[0], '서술형 답변을 추천에 반영하기 어려워 객관식 점수 1위 후보를 표시합니다.') };
+  if (context && !isUsefulContext(context)) return { status: 200, body: fallback(candidates[0], '입력 내용을 추천에 반영하기 어려워 현재 1순위 후보를 표시합니다.') };
   const apiKey = openAIKey();
   if (!apiKey) return { status: 200, body: fallback(candidates[0], 'OPENAI_API_KEY 환경변수가 없어 결정적 후보를 표시합니다.') };
   try {
