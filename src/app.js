@@ -123,28 +123,6 @@ function recommend(answers, limit = 3) {
     .slice(0, limit);
 }
 
-function renderResults(results) {
-  const medals = ['🥇', '🥈', '🥉', '4위', '5위'];
-  $('#results-list').innerHTML = results.map((result, index) => `
-    <article class="result-card rank-${index + 1}">
-      <div class="medal">${medals[index]}</div>
-      <div class="result-main">
-        <p class="rank">${['금메달', '은메달', '동메달', '4위', '5위'][index]} · 적합도 ${Math.round(result.score)}점</p>
-        <h3>${result.breed.name}</h3>
-        <p>${result.breed.description}</p>
-        <div class="result-columns">
-          <div><strong>추천 이유</strong><ul>${result.reasons.map((item) => `<li>${item}</li>`).join('')}</ul></div>
-          <div><strong>확인할 점</strong><ul>${result.cautions.map((item) => `<li>${item}</li>`).join('')}</ul></div>
-        </div>
-        <div class="tags">${result.breed.tags.map((tag) => `<span>${tag}</span>`).join('')}</div>
-      </div>
-    </article>`).join('');
-  $('#quiz-panel').hidden = true;
-  $('#results-panel').hidden = false;
-  $('#subjective-panel').hidden = false;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
 function renderFinal(result) {
   const recommendation = result.recommendation;
   $('#final-breed').textContent = recommendation.breedName;
@@ -174,7 +152,7 @@ async function requestFinal() {
     document.querySelector('[data-subjective]').focus();
     return;
   }
-  const button = $('#final-recommendation');
+  const button = $('#recommend-submit');
   button.disabled = true;
   $('#subjective-validation').hidden = true;
   $('#agent-status').textContent = '다섯 후보와 답변을 검토하고 있습니다…';
@@ -187,6 +165,7 @@ async function requestFinal() {
     state.final = await response.json();
     renderFinal(state.final);
     $('#agent-status').textContent = state.final.searched ? '웹 검색 결과를 반영했습니다.' : '추가 검색 없이 후보를 검토했습니다.';
+    $('#quiz-panel').hidden = true;
     $('#final-heading').focus();
   } catch {
     $('#agent-status').textContent = '최종 추천을 불러오지 못했습니다. 다섯 후보를 참고해 주세요.';
@@ -207,23 +186,20 @@ $('#quiz').addEventListener('change', (event) => {
   if (event.target.matches('input[type="radio"]')) state.answers[event.target.name] = Number(event.target.value);
   $('#validation').hidden = true;
 });
-$('#quiz-form').addEventListener('submit', (event) => {
+$('#quiz-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   if (Object.keys(state.answers).length !== QUESTIONS.length) return showValidation();
   state.results = recommend(state.answers, 5);
-  renderResults(state.results);
+  await requestFinal();
 });
 $('#restart').addEventListener('click', () => {
   state.answers = {};
   state.final = null;
   $('#quiz-form').reset();
-  $('#results-panel').hidden = true;
-  $('#subjective-panel').hidden = true;
   $('#final-panel').hidden = true;
+  $('#subjective-validation').hidden = true;
   $('#agent-status').textContent = '';
   for (const input of document.querySelectorAll('[data-subjective]')) input.value = '';
   $('#quiz-panel').hidden = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
-
-$('#final-recommendation').addEventListener('click', requestFinal);
