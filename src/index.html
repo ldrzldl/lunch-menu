@@ -10,27 +10,22 @@
 <body>
   <main class="app-shell">
     <header class="hero">
-      <div class="brand">멍<span>BTI</span></div>
-      <p class="eyebrow">AI 성향 기반 견종 추천</p>
-      <h1>나와 잘 맞을 강아지는<br><em>어떤 친구</em>일까요?</h1>
-      <p class="hero-copy">나의 생활 리듬과 성향을 바탕으로<br>40종의 견종 중 가까운 다섯 친구를 먼저 찾아드려요.</p>
+      <img class="hero-art" src="/윗그림.png" alt="Meong bti 로고와 여러 강아지 얼굴 그림. 테스트로 나와 맞을 반려견을 찾아드려요!">
     </header>
 
     <section id="quiz-panel" class="panel">
       <div class="panel-heading">
-        <div><p class="eyebrow">QUIZ</p><h2>나를 알아가는 시간</h2></div>
-        <span class="question-count">13 QUESTIONS</span>
+        <div><h2>Question</h2></div>
       </div>
       <form id="quiz-form">
         <div id="quiz"></div>
         <section class="subjective-panel" aria-labelledby="subjective-heading">
-          <div class="panel-heading"><div><p class="eyebrow">YOUR CONTEXT</p><h3 id="subjective-heading">내 상황을 더 알려주세요</h3></div></div>
+          <div class="context-pattern" aria-hidden="true"><span>●</span><span>◆</span><span>●</span></div>
+          <div class="panel-heading context-heading"><div><p class="eyebrow">YOUR CONTEXT</p><h3 id="subjective-heading">내 상황을 더 알려주세요</h3></div><img class="context-dog" src="/내 상황.jpg" alt="" aria-hidden="true"></div>
           <p class="result-intro">객관식 답변과 함께 고려할 생활 맥락을 적어주세요. 답변은 최종 추천 요청에만 사용됩니다.</p>
           <div class="subjective-grid">
-            <label>혼자 있는 시간<textarea data-subjective="aloneTime" rows="3" placeholder="평일에 강아지가 혼자 있는 시간을 알려주세요."></textarea></label>
-            <label>가장 걱정되는 점<textarea data-subjective="concerns" rows="3" placeholder="짖음, 털, 건강, 훈련 등 걱정을 적어주세요."></textarea></label>
-            <label>원하는 생활 방식<textarea data-subjective="lifestyle" rows="3" placeholder="산책, 여행, 가족 생활 등 원하는 모습을 적어주세요."></textarea></label>
-            <label>피하고 싶은 특성<textarea data-subjective="avoid" rows="3" placeholder="반드시 피하고 싶은 특성이 있다면 적어주세요."></textarea></label>
+            <label><span class="field-title">혼자 있는 시간</span><span class="field-help">평일에 강아지가 혼자 있는 시간을 알려주세요.</span><textarea data-subjective="aloneTime" rows="4" placeholder="예: 평일 오전 9시부터 오후 6시까지 혼자 있어요."></textarea></label>
+            <label><span class="field-title">가장 걱정되는 점</span><span class="field-help">짖음, 털, 건강, 훈련 등 걱정을 적어주세요.</span><textarea data-subjective="concerns" rows="4" placeholder="예: 이웃에게 피해가 갈 만큼 짖을까 봐 걱정돼요."></textarea></label>
           </div>
           <p id="subjective-validation" class="validation" role="alert" hidden></p>
           <div class="subjective-actions"><span id="agent-status" role="status" aria-live="polite"></span></div>

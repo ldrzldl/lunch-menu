@@ -1,62 +1,106 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+@font-face { font-family:'Griun'; src:url('/Griun_Cocochoitoon-Rg.ttf') format('truetype'); font-style:normal; font-weight:100 900; font-display:swap; }
+@font-face { font-family:'Ok Mallang'; src:url('/Ok Mallang W.ttf') format('truetype'); font-style:normal; font-weight:100 900; font-display:swap; }
 
-:root { --ink:#20201e; --muted:#7c7b75; --cream:#f8f5ed; --card:#fffdf8; --orange:#ed6a42; --yellow:#f3bd35; --line:#e8e2d7; }
+:root {
+  --black:#191919;
+  --gray:#dedede;
+  --gray-dark:#666;
+  --white:#fff;
+}
+
 * { box-sizing:border-box; }
-body { margin:0; color:var(--ink); background:var(--cream); font-family:'Noto Sans KR',sans-serif; }
-body:before { content:''; position:fixed; inset:0; pointer-events:none; opacity:.32; background-image:radial-gradient(#d9d1c3 .6px, transparent .6px); background-size:8px 8px; }
-.app-shell { position:relative; width:min(760px,100%); margin:0 auto; padding:38px 22px 54px; }
-.hero { padding:20px 8px 44px; }
-.brand { font:900 23px 'DM Sans',sans-serif; letter-spacing:-1px; margin-bottom:68px; }
-.brand span { color:var(--orange); }
-.eyebrow { margin:0 0 10px; color:var(--orange); font:700 12px 'DM Sans',sans-serif; letter-spacing:2px; }
-h1 { margin:0; font-size:clamp(34px,7vw,58px); line-height:1.18; letter-spacing:-3px; }
-h1 em { color:var(--orange); font-style:normal; }
-.hero-copy { margin:22px 0 0; color:var(--muted); line-height:1.8; font-size:15px; }
-.panel { background:var(--card); border:1px solid var(--line); border-radius:24px; padding:34px clamp(22px,5vw,48px); box-shadow:0 14px 40px #55452b0b; }
-.panel-heading { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--line); padding-bottom:24px; margin-bottom:4px; }
-h2 { margin:0; font-size:26px; letter-spacing:-1px; }
-.question-count { color:var(--muted); font:700 11px 'DM Sans',sans-serif; letter-spacing:1px; }
-.question { border:0; border-bottom:1px solid var(--line); margin:0; padding:27px 0; }
-.question legend { display:flex; gap:12px; align-items:center; padding:0; font-size:17px; font-weight:700; letter-spacing:-.5px; }
-.question legend span { color:var(--orange); font:700 12px 'DM Sans',sans-serif; }
-.options { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:16px; }
-.option { position:relative; cursor:pointer; }
-.option input { position:absolute; opacity:0; }
-.option span { display:block; height:100%; padding:13px 14px; color:#67655f; background:#faf8f3; border:1px solid transparent; border-radius:11px; font-size:13px; line-height:1.45; transition:.2s; }
-.option input:checked + span { color:var(--ink); background:#fff0e9; border-color:var(--orange); box-shadow:inset 3px 0 var(--orange); }
-.option input:focus-visible + span { outline:3px solid #f3bd3580; }
-.primary-button,.secondary-button { width:100%; border:0; border-radius:12px; padding:17px 20px; margin-top:30px; cursor:pointer; font:700 15px 'Noto Sans KR',sans-serif; }
-.primary-button { color:white; background:var(--orange); box-shadow:0 8px 18px #ed6a4238; }
-.primary-button span { float:right; font-size:20px; line-height:15px; }
-.secondary-button { color:var(--orange); background:#fff0e9; }
-.validation { color:#c0392b; margin:18px 0 -10px; font-size:13px; }
-.result-intro { color:var(--muted); line-height:1.7; font-size:14px; }
-.result-card { display:flex; gap:17px; border-top:1px solid var(--line); padding:25px 0; }
-.medal { flex:none; font-size:34px; }
-.result-main { flex:1; }
-.rank { margin:0 0 4px; color:var(--orange); font:700 11px 'DM Sans',sans-serif; letter-spacing:.5px; }
-.result-main h3 { margin:0 0 9px; font-size:24px; letter-spacing:-1px; }
-.result-main > p:not(.rank) { margin:0; color:#65635e; font-size:13px; line-height:1.65; }
-.result-columns { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:17px; }
-.result-columns strong { font-size:12px; }
-.result-columns ul { margin:7px 0 0; padding-left:16px; color:#706e67; font-size:12px; line-height:1.7; }
-.tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:15px; }
-.tags span { padding:5px 9px; border-radius:20px; color:#9b613d; background:#fff0e9; font-size:11px; }
-.subjective-panel { margin-top:24px; padding-top:24px; border-top:1px solid var(--line); }
-.subjective-panel h3 { margin:0; font-size:22px; }
-.subjective-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px; }
-.subjective-grid label { display:grid; gap:7px; color:var(--muted); font-size:13px; font-weight:700; }
-textarea { width:100%; resize:vertical; padding:11px; border:1px solid var(--line); border-radius:9px; color:var(--ink); background:#fff; font:inherit; line-height:1.5; }
-.subjective-actions { display:flex; align-items:center; gap:14px; margin-top:16px; }
-.subjective-actions .primary-button { width:auto; margin-top:0; }
-#agent-status { color:var(--muted); font-size:13px; }
-.final-panel { margin-top:22px; }
-.final-panel h3 { margin:22px 0 8px; font-size:28px; }
-.final-summary { color:var(--muted); line-height:1.65; }
-.final-columns { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:18px; }
-.final-columns > div { padding:14px; border-radius:10px; background:#faf7f0; }
-.final-columns ul,.final-panel ul { margin:8px 0 0; padding-left:20px; color:var(--muted); font-size:13px; line-height:1.6; }
-#final-source-block { margin-top:16px; font-size:13px; }
-#final-source-block a { color:var(--orange); }
-footer { padding:24px 8px 0; color:#a19d93; font-size:11px; line-height:1.7; text-align:center; }
-@media (max-width:560px) { .app-shell { padding-top:22px; } .brand { margin-bottom:50px; } .options,.result-columns,.subjective-grid,.final-columns { grid-template-columns:1fr; } .panel { padding:27px 18px; border-radius:18px; } .question legend { font-size:15px; } .question-count { display:none; } .subjective-actions { flex-direction:column; align-items:stretch; } .subjective-actions .primary-button { width:100%; } }
+html { scroll-behavior:smooth; }
+body { position:relative; isolation:isolate; margin:0; color:var(--black); background:var(--white); font-family:'Griun',sans-serif; }
+body::before { content:''; position:fixed; inset:0; z-index:-1; pointer-events:none; background-image:url('/배경.jpg'); background-repeat:repeat; background-position:center top; background-size:260px auto; opacity:.1; }
+.app-shell { width:min(570px,100%); margin:0 auto; padding:32px 18px 42px; }
+
+/* 시안의 작은 로고와 짧은 안내 문구 */
+.hero { padding:0 2px 18px; background:var(--white); text-align:center; }
+.hero-art { display:block; width:100%; height:auto; margin:0 auto; }
+.brand { margin:0 0 10px; font:700 49px/1 'Griun',sans-serif; letter-spacing:-3px; }
+.brand span { margin-left:4px; font-weight:400; }
+.hero-copy { margin:0; font:700 16px/1.45 'Griun',sans-serif; }
+.hero .eyebrow,.hero h1,.hero-note,.dog-sketches { display:none; }
+
+/* Question 표기는 점선 상자 바깥에 둔다. */
+.panel { padding:0; background:var(--white); border:0; }
+.panel-heading { display:flex; align-items:flex-end; justify-content:space-between; margin:0; padding:0 12px 8px; border:0; }
+.panel-heading .eyebrow,.question-count { display:none; }
+h2 { margin:0; font:700 28px/1 'Griun',sans-serif; letter-spacing:.2px; }
+#quiz-panel > .panel-heading h2 { font-family:'Ok Mallang',sans-serif; }
+
+#quiz-form { padding:7px 14px 18px; background:var(--white); border:1.5px dashed var(--black); border-radius:31px; }
+#quiz { counter-reset:question; }
+.question { counter-increment:question; position:relative; margin:0; padding:14px 0 15px; border:0; }
+.question legend { display:flex; align-items:center; width:100%; min-width:0; padding:0; font:700 20px/1.25 'Griun',sans-serif; letter-spacing:-.2px; }
+.question legend span { flex:none; width:24px; overflow:hidden; color:transparent; font-size:0; }
+.question legend span::before { content:counter(question) '.'; color:var(--black); font:700 20px/1 'Ok Mallang',sans-serif; }
+.question legend::after { content:''; flex:1; min-width:52px; height:16px; margin:0 0 0 9px; background-image:url('/여백채우기-강아지.png'); background-repeat:space no-repeat; background-position:left center; background-size:auto 9px; opacity:.68; }
+.options { display:grid; grid-template-columns:1fr 1fr; gap:9px 10px; margin-top:19px; }
+.option { position:relative; min-width:0; cursor:pointer; }
+.option input { position:absolute; width:1px; height:1px; opacity:0; }
+.option span { display:flex; align-items:center; justify-content:center; min-height:47px; height:100%; padding:9px 12px; color:#333; background:var(--gray); border:1px solid transparent; border-radius:9px; font-size:12px; line-height:1.4; text-align:center; }
+.option:hover span { background:#d3d3d3; }
+.option input:checked + span { color:var(--black); background:var(--white); border-color:var(--black); font-weight:700; }
+.option input:checked + span::before { content:'✓'; margin-right:6px; }
+.option input:focus-visible + span { outline:2px solid var(--black); outline-offset:2px; }
+
+/* 원본 기능에 필요한 주관식 영역도 같은 질문지 문법으로 정리 */
+.subjective-panel { position:relative; margin-top:12px; padding:21px 0 4px; border-top:1.5px dashed var(--black); }
+.subjective-panel .panel-heading { justify-content:flex-start; gap:4px; padding:0 0 8px; border:0; }
+.subjective-panel h3 { margin:0; font:700 21px/1.2 'Griun',sans-serif; }
+.context-dog { display:block; width:54px; height:59px; margin:-18px 0 -11px; object-fit:contain; }
+.context-pattern { display:none; }
+.result-intro { margin:4px 0 12px; color:var(--gray-dark); font-size:11px; line-height:1.55; }
+.subjective-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.subjective-grid label { display:grid; gap:5px; padding:12px; background:#eee; border:0; border-radius:9px; }
+.field-title { font:700 17px/1.2 'Griun',sans-serif; }
+.field-help { min-height:34px; color:var(--gray-dark); font-size:10px; line-height:1.5; }
+textarea { width:100%; resize:vertical; padding:9px 10px; color:var(--black); background:var(--white); border:1px solid #aaa; border-radius:6px; font:11px/1.5 'Griun',sans-serif; }
+textarea:focus { outline:1px solid var(--black); border-color:var(--black); }
+textarea::placeholder { color:#999; }
+.subjective-actions { margin-top:9px; }
+#agent-status { color:var(--gray-dark); font-size:11px; }
+.validation { margin:12px 0 -5px; color:var(--black); font-size:11px; font-weight:700; text-decoration:underline; }
+
+.primary-button,.secondary-button { width:100%; margin-top:15px; padding:13px 16px; color:var(--white); background:var(--black); border:1px solid var(--black); border-radius:8px; cursor:pointer; font:700 16px 'Griun',sans-serif; }
+.primary-button span { float:right; font-size:19px; line-height:15px; }
+.primary-button:disabled { cursor:wait; opacity:.55; }
+.secondary-button { color:var(--black); background:var(--gray); }
+
+/* 결과 화면은 기능을 유지하며 같은 흑백 규칙만 적용 */
+.final-panel { margin-top:22px; padding:24px; background:var(--white); border:1.5px dashed var(--black); border-radius:28px; }
+.final-panel .panel-heading { padding:0 0 10px; border-bottom:1px solid var(--black); }
+.final-panel h3 { margin:18px 0 7px; font:700 28px 'Griun',sans-serif; }
+.final-summary { color:var(--gray-dark); font-size:12px; line-height:1.65; }
+.final-columns { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+.final-columns > div { padding:11px; background:#eee; border-radius:8px; }
+.final-columns strong,#final-source-block strong { font-size:11px; }
+.final-columns ul,.final-panel ul { margin:6px 0 0; padding-left:16px; color:#555; font-size:10px; line-height:1.6; }
+#final-source-block { margin-top:14px; }
+#final-source-block a { color:var(--black); }
+.individual-notice { color:#777; font-size:10px; line-height:1.6; }
+footer { margin-top:12px; padding:10px; color:#777; background:rgba(255,255,255,.94); font-size:9px; line-height:1.65; text-align:center; }
+
+@media (max-width:520px) {
+  .app-shell { padding:22px 10px 34px; }
+  .hero { padding-bottom:20px; }
+  .brand { font-size:43px; }
+  .hero-copy { font-size:14px; }
+  #quiz-form { padding:6px 11px 16px; border-radius:25px; }
+  .question { padding:13px 0 14px; }
+  .question legend { font-size:18px; }
+  .question legend span::before { font-size:18px; }
+  .question legend::after { min-width:44px; height:15px; margin-left:7px; margin-right:0; background-size:auto 9px; }
+  .options { gap:8px; margin-top:17px; }
+  .option span { min-height:45px; padding:8px; font-size:11px; }
+  .subjective-grid,.final-columns { grid-template-columns:1fr; }
+}
+
+@media (max-width:350px) {
+  .options { grid-template-columns:1fr; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+}
