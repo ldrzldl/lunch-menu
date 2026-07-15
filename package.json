@@ -12,14 +12,6 @@
     "vercel:link": "npx vercel link",
     "vercel:preview": "npx vercel",
     "vercel:deploy": "npx vercel --prod",
-    "vercel:logs": "npx vercel logs",
-    "supabase:login": "supabase login",
-    "supabase:link": "supabase link --project-ref dxedpmgowlqanderfsww",
-    "supabase:status": "supabase migration list",
-    "supabase:new": "supabase migration new",
-    "supabase:push": "supabase db push"
-  },
-  "devDependencies": {
-    "supabase": "^2.109.1"
+    "vercel:logs": "npx vercel logs"
   }
 }
