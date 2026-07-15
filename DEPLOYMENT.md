@@ -18,6 +18,19 @@ git push origin main
 
 `vercel.json`에 위 설정이 이미 들어 있으므로 대부분 자동으로 채워집니다.
 
+## LLM 최종 추천 환경변수
+
+Vercel Project Settings의 Environment Variables에 다음을 등록하고 새 배포를 생성합니다.
+
+```text
+OPENAI_API_KEY=...
+OPENAI_MODEL=gpt-4o-mini       # 선택
+OPENAI_WEB_SEARCH_TOOL=web_search_preview  # 선택
+```
+
+키는 `api/recommend.js` 서버 함수에서만 읽으며 브라우저로 전달하지 않습니다. 키가
+없거나 OpenAI 요청이 실패하면 객관식 점수 기준 Top-5의 1순위 fallback을 반환합니다.
+
 ## 프로젝트에서 Vercel 관리
 
 ```bash
@@ -41,4 +54,5 @@ npm run build
 npm start
 ```
 
-브라우저에서 `http://localhost:3000`을 열어 확인합니다.
+포트 3000이 사용 중이면 `PORT=4177 npm start` 후
+`http://localhost:4177`을 열어 확인합니다.

@@ -42,5 +42,21 @@ h2 { margin:0; font-size:26px; letter-spacing:-1px; }
 .result-columns ul { margin:7px 0 0; padding-left:16px; color:#706e67; font-size:12px; line-height:1.7; }
 .tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:15px; }
 .tags span { padding:5px 9px; border-radius:20px; color:#9b613d; background:#fff0e9; font-size:11px; }
+.subjective-panel { margin-top:24px; padding-top:24px; border-top:1px solid var(--line); }
+.subjective-panel h3 { margin:0; font-size:22px; }
+.subjective-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px; }
+.subjective-grid label { display:grid; gap:7px; color:var(--muted); font-size:13px; font-weight:700; }
+textarea { width:100%; resize:vertical; padding:11px; border:1px solid var(--line); border-radius:9px; color:var(--ink); background:#fff; font:inherit; line-height:1.5; }
+.subjective-actions { display:flex; align-items:center; gap:14px; margin-top:16px; }
+.subjective-actions .primary-button { width:auto; margin-top:0; }
+#agent-status { color:var(--muted); font-size:13px; }
+.final-panel { margin-top:22px; }
+.final-panel h3 { margin:22px 0 8px; font-size:28px; }
+.final-summary { color:var(--muted); line-height:1.65; }
+.final-columns { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:18px; }
+.final-columns > div { padding:14px; border-radius:10px; background:#faf7f0; }
+.final-columns ul,.final-panel ul { margin:8px 0 0; padding-left:20px; color:var(--muted); font-size:13px; line-height:1.6; }
+#final-source-block { margin-top:16px; font-size:13px; }
+#final-source-block a { color:var(--orange); }
 footer { padding:24px 8px 0; color:#a19d93; font-size:11px; line-height:1.7; text-align:center; }
-@media (max-width:560px) { .app-shell { padding-top:22px; } .brand { margin-bottom:50px; } .options,.result-columns { grid-template-columns:1fr; } .panel { padding:27px 18px; border-radius:18px; } .question legend { font-size:15px; } .question-count { display:none; } }
+@media (max-width:560px) { .app-shell { padding-top:22px; } .brand { margin-bottom:50px; } .options,.result-columns,.subjective-grid,.final-columns { grid-template-columns:1fr; } .panel { padding:27px 18px; border-radius:18px; } .question legend { font-size:15px; } .question-count { display:none; } .subjective-actions { flex-direction:column; align-items:stretch; } .subjective-actions .primary-button { width:100%; } }

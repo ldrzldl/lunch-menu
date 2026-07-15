@@ -7,6 +7,7 @@
   },
   "scripts": {
     "build": "node -e \"const fs=require('fs'); fs.rmSync('dist',{recursive:true,force:true}); fs.cpSync('src','dist',{recursive:true});\"",
+    "test": "node --test",
     "start": "node dev-server.cjs",
     "vercel:login": "npx vercel login",
     "vercel:link": "npx vercel link",

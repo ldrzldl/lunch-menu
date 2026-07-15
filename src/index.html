@@ -13,7 +13,7 @@
       <div class="brand">멍<span>BTI</span></div>
       <p class="eyebrow">AI 성향 기반 견종 추천</p>
       <h1>나와 잘 맞을 강아지는<br><em>어떤 친구</em>일까요?</h1>
-      <p class="hero-copy">나의 생활 리듬과 성향을 바탕으로<br>40종의 견종 중 가장 가까운 세 친구를 찾아드려요.</p>
+      <p class="hero-copy">나의 생활 리듬과 성향을 바탕으로<br>40종의 견종 중 가까운 다섯 친구를 먼저 찾아드려요.</p>
     </header>
 
     <section id="quiz-panel" class="panel">
@@ -32,7 +32,33 @@
       <div class="panel-heading"><div><p class="eyebrow">YOUR MATCH</p><h2>당신과 가까운 친구들</h2></div></div>
       <p class="result-intro">설문 답변과 품종별 생활 특성 태그를 비교한 결과예요.<br>추천은 참고용이며 실제 개체의 성격과 건강은 다를 수 있어요.</p>
       <div id="results-list"></div>
+      <section id="subjective-panel" class="subjective-panel" hidden aria-labelledby="subjective-heading">
+        <div class="panel-heading"><div><p class="eyebrow">YOUR CONTEXT</p><h3 id="subjective-heading">내 상황을 더 알려주세요</h3></div></div>
+        <p class="result-intro">추려낸 다섯 후보를 주관식 답변과 함께 검토합니다. 답변은 최종 추천 요청에만 사용됩니다.</p>
+        <div class="subjective-grid">
+          <label>혼자 있는 시간<textarea data-subjective="aloneTime" rows="3" placeholder="평일에 강아지가 혼자 있는 시간을 알려주세요."></textarea></label>
+          <label>가장 걱정되는 점<textarea data-subjective="concerns" rows="3" placeholder="짖음, 털, 건강, 훈련 등 걱정을 적어주세요."></textarea></label>
+          <label>원하는 생활 방식<textarea data-subjective="lifestyle" rows="3" placeholder="산책, 여행, 가족 생활 등 원하는 모습을 적어주세요."></textarea></label>
+          <label>피하고 싶은 특성<textarea data-subjective="avoid" rows="3" placeholder="반드시 피하고 싶은 특성이 있다면 적어주세요."></textarea></label>
+        </div>
+        <p id="subjective-validation" class="validation" role="alert" hidden></p>
+        <div class="subjective-actions"><button id="final-recommendation" class="primary-button" type="button">LLM 최종 추천 받기</button><span id="agent-status" role="status" aria-live="polite"></span></div>
+      </section>
       <button id="restart" class="secondary-button" type="button">다시 테스트하기</button>
+    </section>
+
+    <section id="final-panel" class="panel final-panel" hidden aria-labelledby="final-heading">
+      <div class="panel-heading"><div><p class="eyebrow">FINAL REVIEW</p><h2 id="final-heading" tabindex="-1">최종 추천</h2></div></div>
+      <h3 id="final-breed"></h3>
+      <p id="final-summary" class="final-summary"></p>
+      <div class="final-columns">
+        <div><strong>객관식 적합 근거</strong><ul id="final-objective"></ul></div>
+        <div><strong>주관식 적합 근거</strong><ul id="final-subjective"></ul></div>
+        <div><strong>확인할 점</strong><ul id="final-cautions"></ul></div>
+      </div>
+      <div id="final-source-block"><strong>검색 출처</strong><ul id="final-sources"></ul></div>
+      <p id="final-fallback" class="individual-notice" hidden>LLM 또는 웹 검색을 사용할 수 없어 결정적 후보를 표시했습니다.</p>
+      <p class="individual-notice">LLM 판단과 품종 정보는 참고용입니다. 실제 개체의 성격과 건강 상태를 확인하세요.</p>
     </section>
 
     <footer>멍BTI는 입양 적합성이나 품종의 우열을 판정하지 않습니다. 책임 있는 반려생활을 위해 가족과 충분히 상의해 주세요.</footer>

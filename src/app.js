@@ -16,7 +16,7 @@ const QUESTIONS = [
   { id: 'training', title: '훈련/교육에 투자할 의지는?', options: ['전문 훈련사와 함께 체계적으로 훈련할 계획이에요', '기본적인 배변·훈련 정도만 직접 할 수 있어요', '시간이 많지 않아 최소한만 가능해요'] }
 ];
 
-const state = { answers: {}, results: [] };
+const state = { answers: {}, results: [], final: null };
 const $ = (selector) => document.querySelector(selector);
 
 function renderQuiz() {
@@ -116,20 +116,20 @@ function cautions(breed, profile) {
   return notes.length ? notes.slice(0, 2) : ['개체별 성격과 건강 상태를 직접 확인하세요'];
 }
 
-function recommend(answers) {
+function recommend(answers, limit = 3) {
   const profile = targetProfile(answers);
   return BREEDS.map((breed) => ({ breed, score: scoreBreed(breed, profile), reasons: reasons(breed, profile), cautions: cautions(breed, profile) }))
     .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
+    .slice(0, limit);
 }
 
 function renderResults(results) {
-  const medals = ['🥇', '🥈', '🥉'];
+  const medals = ['🥇', '🥈', '🥉', '4위', '5위'];
   $('#results-list').innerHTML = results.map((result, index) => `
     <article class="result-card rank-${index + 1}">
       <div class="medal">${medals[index]}</div>
       <div class="result-main">
-        <p class="rank">${['금메달', '은메달', '동메달'][index]} · 적합도 ${Math.round(result.score)}점</p>
+        <p class="rank">${['금메달', '은메달', '동메달', '4위', '5위'][index]} · 적합도 ${Math.round(result.score)}점</p>
         <h3>${result.breed.name}</h3>
         <p>${result.breed.description}</p>
         <div class="result-columns">
@@ -141,7 +141,58 @@ function renderResults(results) {
     </article>`).join('');
   $('#quiz-panel').hidden = true;
   $('#results-panel').hidden = false;
+  $('#subjective-panel').hidden = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderFinal(result) {
+  const recommendation = result.recommendation;
+  $('#final-breed').textContent = recommendation.breedName;
+  $('#final-summary').textContent = recommendation.summary;
+  for (const [id, items] of [['final-objective', recommendation.objectiveFit], ['final-subjective', recommendation.subjectiveFit], ['final-cautions', recommendation.cautions]]) {
+    const list = $(`#${id}`);
+    list.replaceChildren(...(items || []).map((item) => Object.assign(document.createElement('li'), { textContent: item })));
+  }
+  const sources = $('#final-sources');
+  sources.replaceChildren(...(recommendation.sources || []).map((source) => {
+    const item = document.createElement('li');
+    const link = document.createElement('a');
+    link.href = source.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = source.title;
+    item.append(link, source.snippet ? ` — ${source.snippet}` : '');
+    return item;
+  }));
+  $('#final-source-block').hidden = !recommendation.sources?.length;
+  $('#final-fallback').hidden = !result.fallback;
+  $('#final-panel').hidden = false;
+}
+
+async function requestFinal() {
+  const subjective = Object.fromEntries([...document.querySelectorAll('[data-subjective]')].map((input) => [input.dataset.subjective, input.value.trim()]));
+  if (!Object.values(subjective).some(Boolean)) {
+    $('#subjective-validation').hidden = false;
+    $('#subjective-validation').textContent = '주관식 답변을 하나 이상 입력해 주세요.';
+    document.querySelector('[data-subjective]').focus();
+    return;
+  }
+  const button = $('#final-recommendation');
+  button.disabled = true;
+  $('#subjective-validation').hidden = true;
+  $('#agent-status').textContent = '다섯 후보와 답변을 검토하고 있습니다…';
+  try {
+    const response = await fetch('/api/recommend', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ subjective, candidates: state.results.map(({ breed }) => ({ name: breed.name })) })
+    });
+    if (!response.ok) throw new Error('request failed');
+    state.final = await response.json();
+    renderFinal(state.final);
+    $('#agent-status').textContent = state.final.searched ? '웹 검색 결과를 반영했습니다.' : '추가 검색 없이 후보를 검토했습니다.';
+    $('#final-heading').focus();
+  } catch {
+    $('#agent-status').textContent = '최종 추천을 불러오지 못했습니다. 다섯 후보를 참고해 주세요.';
+  } finally {
+    button.disabled = false;
+  }
 }
 
 function showValidation() {
@@ -159,13 +210,20 @@ $('#quiz').addEventListener('change', (event) => {
 $('#quiz-form').addEventListener('submit', (event) => {
   event.preventDefault();
   if (Object.keys(state.answers).length !== QUESTIONS.length) return showValidation();
-  state.results = recommend(state.answers);
+  state.results = recommend(state.answers, 5);
   renderResults(state.results);
 });
 $('#restart').addEventListener('click', () => {
   state.answers = {};
+  state.final = null;
   $('#quiz-form').reset();
   $('#results-panel').hidden = true;
+  $('#subjective-panel').hidden = true;
+  $('#final-panel').hidden = true;
+  $('#agent-status').textContent = '';
+  for (const input of document.querySelectorAll('[data-subjective]')) input.value = '';
   $('#quiz-panel').hidden = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+
+$('#final-recommendation').addEventListener('click', requestFinal);
