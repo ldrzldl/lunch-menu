@@ -110,9 +110,10 @@ test('final review follows the ReAct tool-call and observation loop', async () =
         assert.equal(request.messages.at(-1).role, 'tool');
         assert.equal(request.messages.at(-1).tool_call_id, 'call-1');
         const observation = JSON.parse(request.messages.at(-1).content);
-        assert.deepEqual(observation.breeds, ['말티즈', '비숑 프리제', '토이·미니어처 푸들', '치와와', '시츄']);
-        assert.match(observation.query, /말티즈/);
-        assert.match(observation.query, /시츄/);
+        assert.equal(observation.searches.length, 5);
+        assert.deepEqual(observation.searches.map(({ breedName }) => breedName), ['말티즈', '비숑 프리제', '토이·미니어처 푸들', '치와와', '시츄']);
+        assert.match(observation.searches[0].query, /말티즈/);
+        assert.match(observation.searches[4].query, /시츄/);
       }
       return new Response(JSON.stringify(chatCalls === 1
         ? { choices: [{ message: { role: 'assistant', content: null, tool_calls: [{ id: 'call-1', type: 'function', function: { name: 'web_search', arguments: '{"query":"말티즈 털 관리"}' } }] } }] }
@@ -127,7 +128,7 @@ test('final review follows the ReAct tool-call and observation loop', async () =
     assert.equal(result.body.recommendation.summary, '검색 후 판단');
     assert.deepEqual(result.body.recommendation.reasons, ['조건과 상황']);
     assert.equal(chatCalls, 2);
-    assert.equal(searchCalls, 1);
+    assert.equal(searchCalls, 5);
   } finally {
     globalThis.fetch = originalFetch;
     if (originalKey === undefined) delete process.env.OPENAI_API_KEY;
