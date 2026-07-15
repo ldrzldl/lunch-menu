@@ -30,7 +30,7 @@ test('ordinary subjective input reaches the LLM', async () => {
   } }] }), { status: 200 });
   const result = await handleRecommend({
     candidates: [{ name: '말티즈' }, { name: '비숑 프리제' }],
-    context: '우리 집은 아파트이고 조용한 강아지를 원합니다.'
+    context: '저는 신중하게 선택하고 싶어요.'
   });
   try {
     assert.equal(result.status, 200);
